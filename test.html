@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuickHire AI</title>
+</head>
+<body>
+  <h1>QuickHire AI Resume Generator</h1>
+
+  <label>Full Name:</label>
+  <input type="text" id="fullName"><br><br>
+
+  <label>Email:</label>
+  <input type="email" id="email"><br><br>
+
+  <label>Skills (comma separated):</label>
+  <input type="text" id="skills"><br><br>
+
+  <label>Summary:</label><br>
+  <textarea id="summary" rows="4" cols="50"></textarea><br><br>
+
+  <label>Job Target:</label>
+  <input type="text" id="jobTarget"><br><br>
+
+  <label>Template Style:</label>
+  <select id="templateStyle">
+    <option value="modern">Modern</option>
+    <option value="classic">Classic</option>
+    <option value="creative">Creative</option>
+    <option value="minimal">Minimal</option>
+  </select><br><br>
+
+  <button onclick="generateResume()">Generate Resume</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function generateResume() {
+      const fullName = document.getElementById("fullName").value;
+      const email = document.getElementById("email").value;
+      const skills = document.getElementById("skills").value.split(",").map(s => s.trim());
+      const summary = document.getElementById("summary").value;
+      const jobTarget = document.getElementById("jobTarget").value;
+      const templateStyle = document.getElementById("templateStyle").value;
+
+      const payload = {
+        personal_info: {
+          full_name: fullName,
+          email: email
+        },
+        experiences: [],
+        education: [],
+        skills: skills,
+        summary: summary,
+        job_target: jobTarget,
+        template_style: templateStyle
+      };
+
+      try {
+        const res = await fetch("http://localhost:8000/api/v1/generate-resume", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.download_url) {
+          document.getElementById("result").innerHTML = `
+            ✅ Resume ready: <a href="${data.download_url}" target="_blank">Download PDF</a>
+          `;
+        } else {
+          document.getElementById("result").innerText = "⚠️ Failed: " + data.message;
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById("result").innerText = "❌ Error generating resume.";
+      }
+    }
+  </script>
+</body>
+</html>

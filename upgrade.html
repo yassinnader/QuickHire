@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing Plans – QuickHire AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    /* Decorative wave SVG at top */
+    .wave-top {
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 170px; z-index: 0;
+      pointer-events: none;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 20px 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 40px;
+      font-size: 3.3em;
+      text-shadow: 2px 2px 12px rgba(0,0,0,0.13);
+      letter-spacing: 2px;
+      font-weight: 800;
+    }
+    #plans {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+      padding: 60px 30px;
+      background: #fff;
+      border-radius: 32px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+    .plan-card {
+      background: linear-gradient(135deg, #fafdff 85%, #eaf1ff 100%);
+      box-shadow: 0 8px 26px rgba(0,123,255,0.08);
+      border-radius: 20px;
+      padding: 38px 25px 35px 25px;
+      width: 355px;
+      min-height: 410px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(.33,1.81,.75,1.01);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border: 2.2px solid transparent;
+    }
+    .plan-card.popular {
+      border: 2.2px solid #ffb600;
+      box-shadow: 0 15px 48px #ffb60026, 0 8px 26px rgba(0,123,255,0.08);
+      background: linear-gradient(135deg,#fffbe6 85%, #eaf1ff 100%);
+    }
+    .plan-badge {
+      position: absolute;
+      top: 17px;
+      right: 25px;
+      background: #ffb600;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1em;
+      border-radius: 6px;
+      padding: 4px 13px;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 10px #ffb6002c;
+      z-index: 2;
+      text-shadow: 0 2px 8px #fff7d0a0;
+      animation: bounceIn 0.7s;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.9);}
+      70% { transform: scale(1.06);}
+      100% { transform: scale(1);}
+    }
+    .plan-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #007bff, #764ba2);
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+    }
+    .plan-card:hover {
+      transform: translateY(-10px) scale(1.035);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.13);
+      border-color: #007bff;
+    }
+    .plan-card h3 {
+      margin-top: 0;
+      font-size: 2.1em;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .price {
+      font-size: 3em;
+      font-weight: bold;
+      color: #007bff;
+      margin: 27px 0 12px 0;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.09);
+    }
+    .plan-cycle {
+      color: #888da9;
+      font-size: 1em;
+      margin-bottom: 17px;
+    }
+    .plan-card p {
+      font-size: 1.23em;
+      color: #767676;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    .plan-card ul {
+      text-align: left;
+      padding: 0 0 0 12px;
+      margin-bottom: 28px;
+      color: #444;
+      font-size: 1.08em;
+      list-style: none;
+    }
+    .plan-card ul li {
+      margin-bottom: 12px;
+      padding-left: 24px;
+      position: relative;
+    }
+    .plan-card ul li:before {
+      content: "✔";
+      color: #28a745;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+      font-size: 1.1em;
+    }
+    .plan-card button {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      border: none;
+      padding: 18px 35px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.2em;
+      font-weight: bold;
+      transition: all 0.28s cubic-bezier(.33,1.81,.75,1.01);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.18);
+    }
+    .plan-card button:hover {
+      background: linear-gradient(135deg, #0056b3, #007bff);
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.23);
+    }
+
+    /* FEATURE BOX */
+    #featureBox {
+      display: none;
+      background: white;
+      border-radius: 28px;
+      padding: 54px 40px;
+      max-width: 930px;
+      min-height: 510px;
+      margin: 0 auto;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      position: relative;
+      z-index: 5;
+    }
+    #featureTitle {
+      font-size: 2.15em;
+      margin-bottom: 32px;
+      color: #333;
+      font-weight: 800;
+    }
+    #featureList {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 38px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px 35px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #featureList li {
+      padding: 18px 15px 18px 20px;
+      font-size: 1.15em;
+      color: #555;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 5px solid #007bff;
+      transition: transform 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #featureList li i {
+      color: #007bff;
+      font-size: 1.2em;
+    }
+    #featureList li:hover {
+      transform: translateX(7px) scale(1.03);
+      background: #e9ecef;
+    }
+    /* Payment Form */
+    #paymentForm {
+      display: none;
+      margin-top: 32px;
+      text-align: left;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #f8f9fa;
+      padding: 32px 23px 23px 23px;
+      border-radius: 15px;
+      border: 2px solid #e9ecef;
+      box-shadow: 0 4px 15px #007bff13;
+      position: relative;
+      z-index: 10;
+    }
+    #paymentForm input {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 1.1em;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+      background: #fff;
+    }
+    #paymentForm input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+    #confirmPaymentBtn {
+      margin-top: 13px;
+      width: 100%;
+      padding: 16px;
+      font-size: 1.15em;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.23s;
+      box-shadow: 0 4px 12px #28a74536;
+    }
+    #confirmPaymentBtn:hover {
+      background: #218838;
+    }
+    /* Buttons Container */
+    .buttons-container {
+      margin-top: 37px;
+      display: flex;
+      justify-content: center;
+      gap: 19px;
+    }
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 15px 32px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: bold;
+      transition: background 0.23s;
+    }
+    .back-btn:hover {
+      background: #545b62;
+    }
+    .status {
+      text-align: center;
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 12px;
+      display: none;
+      font-size: 1.15em;
+      font-weight: 600;
+      animation: bounceIn 0.6s;
+    }
+    .status.success {
+      background: #d4edda;
+      border: 2px solid #c3e6cb;
+      color: #155724;
+    }
+    /* Testimonials section */
+    .testimonials {
+      margin: 60px auto 0 auto;
+      max-width: 1200px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 20px;
+      box-shadow: 0 8px 40px #667eea18;
+      padding: 48px 32px 36px 32px;
+    }
+    .testimonials-title {
+      color: #007bff;
+      font-size: 2em;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .testimonial-list {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .testimonial {
+      background: #fafdff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px #007bff13;
+      padding: 27px 23px;
+      min-width: 260px;
+      max-width: 330px;
+      font-size: 1.06em;
+      color: #444;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .testimonial:before {
+      content: "“";
+      font-size: 2.5em;
+      color: #007bff;
+      position: absolute;
+      left: 16px;
+      top: 0px;
+      opacity: 0.15;
+    }
+    .testimonial .author {
+      margin-top: 17px;
+      font-weight: 600;
+      color: #555;
+      font-size: 1em;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    /* FAQ Section */
+    .faq-section {
+      margin: 60px auto;
+      max-width: 900px;
+      background: #fafdff;
+      border-radius: 16px;
+      box-shadow: 0 5px 24px #007bff13;
+      padding: 38px 22px 30px 22px;
+    }
+    .faq-title {
+      color: #764ba2;
+      font-size: 2em;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .faq-list {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      margin-bottom: 18px;
+      border-bottom: 1.5px solid #e5e9f5;
+      padding-bottom: 16px;
+      cursor: pointer;
+      transition: background 0.13s;
+      border-radius: 7px;
+      padding-left: 9px;
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question {
+      color: #333;
+      font-weight: 700;
+      font-size: 1.06em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      color: #555;
+      font-size: 1em;
+      transition: max-height 0.35s cubic-bezier(.33,1.81,.75,1.01), padding 0.2s;
+      padding: 0 0;
+    }
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 10px 0 7px 0;
+    }
+    .faq-item.active {
+      background: #e7f1ff;
+    }
+    /* Responsive */
+    @media (max-width: 950px) {
+      #plans { gap: 18px; }
+      .plan-card { width: 96vw; min-width: 220px; max-width: 390px; }
+      #featureBox { padding: 24px 7vw; }
+      #featureList { grid-template-columns: 1fr; }
+      .container { padding: 35px 5vw; }
+    }
+    @media (max-width: 700px) {
+      #plans, .testimonials { padding: 18px 5vw; }
+      .plan-card { padding: 18px 10px 23px 10px; min-height: 330px;}
+      h1 { font-size: 2.1em; }
+      #featureBox { padding: 16px 2vw; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 1.4em;}
+      #plans { flex-direction: column; padding: 8px 2vw;}
+      .plan-card { width: 92vw; }
+      .testimonials { padding: 21px 2vw 20px 2vw; }
+      .faq-section { padding: 18px 2vw 9px 2vw; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative SVG -->
+  <svg class="wave-top" viewBox="0 0 1440 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#fff" fill-opacity="0.9" d="M0,32 C210,110 540,-40 800,50 C1070,146 1370,20 1440,32 L1440,0 L0,0 Z"></path>
+  </svg>
+  <div class="container">
+    <h1>Choose Your Plan</h1>
+    <div id="plans">
+      <div class="plan-card">
+        <h3>🚀 Starter Plan</h3>
+        <div class="price">$9.99</div>
+        <div class="plan-cycle">per month</div>
+        <p>Perfect for job seekers getting started</p>
+        <ul>
+          <li>10 CVs & Cover Letters</li>
+          <li>PDF download</li>
+          <li>Email Support</li>
+          <li>Standard Templates</li>
+        </ul>
+        <button onclick="showFeatures('starter')">View Features</button>
+      </div>
+      <div class="plan-card popular">
+        <span class="plan-badge">POPULAR</span>
+        <h3>🔥 Pro Plan</h3>
+        <div class="price">$19.99</div>
+        <div class="plan-cycle">per month</div>
+        <p>Best for active job hunters</p>
+        <ul>
+          <li>Unlimited document generation</li>
+          <li>LinkedIn Bio Generator</li>
+          <li>Resume Optimizer</li>
+          <li>Tone Control</li>
+          <li>Premium Templates</li>
+          <li>Priority Support</li>
+        </ul>
+        <button onclick="showFeatures('pro')">View Features</button>
+      </div>
+      <div class="plan-card">
+        <h3>👑 Ultimate Plan</h3>
+        <div class="price">$29.99</div>
+        <div class="plan-cycle">per month</div>
+        <p>Complete professional package</p>
+        <ul>
+          <li>All Pro features</li>
+          <li>AI Smart Assistant</li>
+          <li>Application Tracker</li>
+          <li>Lifetime Support</li>
+          <li>Custom Branding</li>
+          <li>Advanced Analytics</li>
+        </ul>
+        <button onclick="showFeatures('ultimate')">View Features</button>
+      </div>
+    </div>
+    <div id="featureBox">
+      <h2 id="featureTitle"></h2>
+      <ul id="featureList"></ul>
+      <form id="paymentForm" autocomplete="off">
+        <h3 style="text-align:center;margin-bottom:18px;color:#333;">Complete Your Purchase</h3>
+        <input type="text" id="userName" placeholder="Your Full Name" required />
+        <input type="email" id="userEmail" placeholder="Email Address" required />
+        <input type="text" id="promoCode" placeholder="Promo Code (Optional)" />
+        <button id="confirmPaymentBtn" type="submit">💳 Confirm Payment</button>
+      </form>
+      <div class="buttons-container">
+        <button class="back-btn" onclick="showPlans()">← Back to Plans</button>
+      </div>
+    </div>
+    <div id="statusMessage" class="status"></div>
+  </div>
+  <!-- Testimonials -->
+  <div class="testimonials">
+    <div class="testimonials-title">What Our Customers Say</div>
+    <div class="testimonial-list">
+      <div class="testimonial">
+        QuickHire AI helped me land my dream job in just 2 weeks! The resume optimizer is a game changer. <div class="author"><img src="https://randomuser.me/api/portraits/men/32.jpg" width="32" style="border-radius:50%"> Mike R.</div>
+      </div>
+      <div class="testimonial">
+        The LinkedIn Bio Generator made my profile stand out and got me noticed by recruiters. Highly recommended.<div class="author"><img src="https://randomuser.me/api/portraits/women/37.jpg" width="32" style="border-radius:50%"> Sarah T.</div>
+      </div>
+      <div class="testimonial">
+        I love the Ultimate Plan – the smart assistant is so helpful and support is always responsive.<div class="author"><img src="https://randomuser.me/api/portraits/men/76.jpg" width="32" style="border-radius:50%"> Ahmed Z.</div>
+      </div>
+    </div>
+  </div>
+  <!-- FAQ Section -->
+  <div class="faq-section">
+    <div class="faq-title">Frequently Asked Questions</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-question">Can I cancel my subscription at any time? <span>+</span></div>
+        <div class="faq-answer">Absolutely! You can cancel whenever you want. Your plan will remain active until the end of the billing cycle.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Is my data safe and private? <span>+</span></div>
+        <div class="faq-answer">Your data is encrypted and never shared. We follow industry best practices to keep your information secure.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Can I upgrade or downgrade later? <span>+</span></div>
+        <div class="faq-answer">Yes! You can upgrade or downgrade your plan anytime with just a click from your dashboard.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Do you offer team or business plans? <span>+</span></div>
+        <div class="faq-answer">Yes, please contact our sales team for details about team or enterprise plans.</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let userPlan = null;
+    let userCredits = 0;
+    let selectedPlan = null;
+    let planPrice = "";
+    let appliedDiscount = 0;
+
+    function showPlans() {
+      document.getElementById("plans").style.display = "flex";
+      document.getElementById("featureBox").style.display = "none";
+      document.getElementById("paymentForm").style.display = "none";
+      document.getElementById("statusMessage").style.display = "none";
+      planPrice = "";
+      appliedDiscount = 0;
+    }
+
+    function showFeatures(plan) {
+      const featureBox = document.getElementById("featureBox");
+      const featureTitle = document.getElementById("featureTitle");
+      const featureList = document.getElementById("featureList");
+      const paymentForm = document.getElementById("paymentForm");
+
+      selectedPlan = plan;
+      paymentForm.style.display = "block";
+
+      let features = [];
+      if (plan === "starter") {
+        featureTitle.textContent = "🚀 Starter Plan – Features";
+        planPrice = 9.99;
+        features = [
+          "<i>✔</i> Create 10 CVs and Cover Letters",
+          "<i>✔</i> PDF download",
+          "<i>✔</i> Basic Email Support",
+          "<i>✔</i> Standard Templates"
+        ];
+      } else if (plan === "pro") {
+        featureTitle.textContent = "🔥 Pro Plan – Features";
+        planPrice = 19.99;
+        features = [
+          "<i>✔</i> Unlimited document generation",
+          "<i>✔</i> LinkedIn Bio Generator",
+          "<i>✔</i> Resume Optimizer",
+          "<i>✔</i> Tone Control",
+          "<i>✔</i> Premium Templates",
+          "<i>✔</i> Priority Support"
+        ];
+      } else if (plan === "ultimate") {
+        featureTitle.textContent = "👑 Ultimate Plan – Features";
+        planPrice = 29.99;
+        features = [
+          "<i>✔</i> All Pro features",
+          "<i>✔</i> AI Smart Assistant",
+          "<i>✔</i> Application Tracker",
+          "<i>✔</i> Lifetime Support",
+          "<i>✔</i> Custom Branding",
+          "<i>✔</i> Advanced Analytics"
+        ];
+      }
+      featureList.innerHTML = "";
+      features.forEach(f => {
+        const li = document.createElement("li");
+        li.innerHTML = f;
+        featureList.appendChild(li);
+      });
+
+      document.getElementById("plans").style.display = "none";
+      featureBox.style.display = "block";
+    }
+
+    // Promo code logic for demo
+    function applyPromo(code) {
+      code = code.trim().toLowerCase();
+      if (!code) return 0;
+      if (code === "quick10") return 10; // $10 off
+      if (code === "summer25") return 25; // $25 off
+      if (code === "freepro") return 100; // 100% off for demo
+      return 0;
+    }
+
+    // Handle payment form submission
+    document.getElementById("paymentForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("userName").value.trim();
+      const email = document.getElementById("userEmail").value.trim();
+      const promo = document.getElementById("promoCode").value.trim();
+      const statusDiv = document.getElementById("statusMessage");
+
+      let discount = applyPromo(promo);
+      appliedDiscount = discount;
+      let finalPrice = Math.max(planPrice - discount, 0);
+
+      if (name && email) {
+        userPlan = selectedPlan;
+        userCredits = selectedPlan === "starter" ? 10 : 999;
+
+        let msg = `✅ Payment successful for "<b>${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)}</b>" plan!`;
+        if (discount > 0) {
+          msg += `<br>Promo code applied: <b>-$${discount}</b><br>`;
+        }
+        msg += `<br>Charged: <b>$${finalPrice.toFixed(2)}</b>.<br>Welcome, <b>${name}</b>!`;
+
+        statusDiv.innerHTML = msg;
+        statusDiv.className = "status success";
+        statusDiv.style.display = "block";
+
+        // Store plan in localStorage for demo
+        localStorage.setItem('quickhire_plan', selectedPlan);
+        localStorage.setItem('quickhire_credits', userCredits);
+        localStorage.setItem('quickhire_email', email);
+
+        setTimeout(() => {
+          showPlans();
+        }, 3000);
+      }
+    });
+
+    // FAQ expand/collapse
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.addEventListener('click', function() {
+        this.classList.toggle('active');
+        // update the symbol
+        const q = this.querySelector('.faq-question span');
+        if (this.classList.contains('active')) {
+          q.textContent = '–';
+        } else {
+          q.textContent = '+';
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", showPlans);
+  </script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+2025-06-30 08:56:03,602 - auth_utils - WARNING - No .env file found and no API keys in environment
+2025-06-30 08:56:03,602 - auth_utils - ERROR - Failed to get OpenAI API key: OPENAI_API_KEY not found in environment variables. Available API keys: None
+2025-06-30 08:56:03,602 - __main__ - ERROR - Failed to initialize Enhanced AI Service: OpenAI API key retrieval failed: OPENAI_API_KEY not found in environment variables. Available API keys: None

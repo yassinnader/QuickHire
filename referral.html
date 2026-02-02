@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invite Friends – QuickHire AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Minimal modern styling for demo purposes */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background: #2b354f;
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-weight: bold;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 1.2rem;
+            transition: text-decoration 0.2s;
+        }
+        .container {
+            max-width: 420px;
+            margin: 2.5rem auto;
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 36px rgba(44,62,80,0.08);
+            text-align: center;
+        }
+        input[type="text"] {
+            font-size: 1rem;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            margin-bottom: 0.8rem;
+            background: #f6f8fa;
+        }
+        button, .share-btn {
+            background: #4f8cff;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.4rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-top: 0.4rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover, .share-btn:hover {
+            background: #3067d6;
+        }
+        .copy-message {
+            color: #2ecc71;
+            font-size: 0.98rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .share-row {
+            margin-top: 1.6rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.95rem;
+            background: #f6f8fa;
+            color: #333;
+            border: 1px solid #eaeaea;
+            padding: 0.6rem 1rem;
+        }
+        .share-btn.whatsapp { color: #25d366; border-color: #25d366; }
+        .share-btn.twitter  { color: #1da1f2; border-color: #1da1f2; }
+        .share-btn.email    { color: #ea4335; border-color: #ea4335; }
+        @media (max-width: 520px) {
+            .container { padding: 1.5rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">🚀 QuickHire AI</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Invite Your Friends</h2>
+        <p>Share your unique link and earn <b>1 extra credit</b> for each signup!</p>
+        <input id="invite-link" type="text" readonly value="https://quickhire.ai/invite?ref=YOURCODE" style="width: 100%; padding: 12px; margin-top: 10px;">
+        <button id="copy-btn" aria-label="Copy invite link">Copy Invite Link 📋</button>
+        <div class="copy-message" id="copy-msg">Link copied to clipboard!</div>
+        
+        <div class="share-row">
+            <button class="share-btn whatsapp" id="whatsapp-share" aria-label="Share on WhatsApp">🟢 WhatsApp</button>
+            <button class="share-btn twitter" id="twitter-share" aria-label="Share on Twitter">🔵 Twitter</button>
+            <button class="share-btn email" id="email-share" aria-label="Share by Email">✉️ Email</button>
+        </div>
+    </div>
+
+    <script>
+    // Replace with user's unique code if available
+    const referralCode = 'YOURCODE'; // TODO: dynamically replace with logged-in user's code
+    const inviteLink = `https://quickhire.ai/invite?ref=${referralCode}`;
+    document.getElementById('invite-link').value = inviteLink;
+
+    // Copy to clipboard
+    document.getElementById('copy-btn').addEventListener('click', function() {
+        const linkInput = document.getElementById('invite-link');
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(linkInput.value).then(() => {
+            const msg = document.getElementById('copy-msg');
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 1500);
+        });
+    });
+
+    // Social sharing
+    document.getElementById('whatsapp-share').addEventListener('click', function() {
+        window.open(`https://wa.me/?text=Join%20me%20on%20QuickHire%20AI!%20Sign%20up%20with%20my%20link%20to%20earn%20extra%20credits:%20${encodeURIComponent(inviteLink)}`,'_blank');
+    });
+    document.getElementById('twitter-share').addEventListener('click', function() {
+        window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20QuickHire%20AI!%20Sign%20up%20with%20my%20invite%20link%20and%20get%20extra%20credits:%20${encodeURIComponent(inviteLink)}`,'_blank');
+    });
+    document.getElementById('email-share').addEventListener('click', function() {
+        window.open(`mailto:?subject=Join QuickHire AI!&body=Sign up with my QuickHire AI invite link and earn extra credits: ${inviteLink}`,'_blank');
+    });
+    </script>
+</body>
+</html>

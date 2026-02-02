@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up – QuickHire AI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: rgba(43, 53, 79, 0.9);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        .nav-logo {
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #4f8cff;
+        }
+        .container {
+            max-width: 450px;
+            margin: 2.5rem auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .container h2 {
+            color: #2b354f;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 1.8rem;
+            text-align: left;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.7rem;
+            font-weight: 500;
+            color: #2b354f;
+        }
+        input[type="email"], input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #eaeaea;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #4f8cff;
+            box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #4f8cff;
+            font-weight: 500;
+            user-select: none;
+            transition: color 0.3s ease;
+        }
+        .password-toggle:hover {
+            color: #2b354f;
+        }
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .strength-bar {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .strength-weak { background: #e74c3c; width: 25%; }
+        .strength-fair { background: #f39c12; width: 50%; }
+        .strength-good { background: #f1c40f; width: 75%; }
+        .strength-strong { background: #27ae60; width: 100%; }
+        #signupBtn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4f8cff, #667eea);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        #signupBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 140, 255, 0.3);
+        }
+        #signupBtn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .social-signup {
+            margin: 2rem 0;
+        }
+        .social-signup p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .social-btn {
+            display: inline-block;
+            margin: 0 0.5rem;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .social-btn.google { 
+            background: linear-gradient(135deg, #ea4335, #fbbc05); 
+        }
+        .social-btn.github { 
+            background: linear-gradient(135deg, #24292f, #40464f); 
+        }
+        .social-btn.linkedin { 
+            background: linear-gradient(135deg, #0077b5, #00a0dc); 
+        }
+        .terms {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 2rem;
+            line-height: 1.5;
+        }
+        .terms a {
+            color: #4f8cff;
+            text-decoration: none;
+        }
+        .terms a:hover {
+            text-decoration: underline;
+        }
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .success-message {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+        .error-message {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 520px) {
+            .container { 
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            .social-btn {
+                display: block;
+                margin: 0.5rem 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">🚀 QuickHire AI</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>Create Your Account</h2>
+        <div class="success-message message" id="successMsg"></div>
+        <div class="error-message message" id="errorMsg"></div>
+        <form id="signupForm" autocomplete="off">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Create a strong password" required minlength="8">
+                    <span class="password-toggle" id="togglePassword">Show</span>
+                </div>
+                <div class="password-strength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <small id="strengthText" style="color: #666; font-size: 0.85rem; margin-top: 0.5rem; display: block;"></small>
+            </div>
+            <div class="form-group">
+                <label for="referral">Referral Code (Optional)</label>
+                <input type="text" id="referral" placeholder="Enter referral code if you have one">
+            </div>
+            <button type="submit" id="signupBtn">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="buttonText">Create Account</span>
+            </button>
+        </form>
+        <div class="social-signup">
+            <p>Or continue with</p>
+            <button class="social-btn google" id="googleSignup">Google</button>
+            <button class="social-btn github" id="githubSignup">GitHub</button>
+            <button class="social-btn linkedin" id="linkedinSignup">LinkedIn</button>
+        </div>
+        <div class="terms">
+            By creating an account, you agree to our <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>.<br><br>
+            Already have an account? <a href="login.html"><strong>Sign in here</strong></a>
+        </div>
+    </div>
+
+    <script>
+        // Password visibility toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let score = 0;
+            let feedback = '';
+            
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            strengthBar.className = 'strength-bar';
+            
+            if (score < 3) {
+                strengthBar.classList.add('strength-weak');
+                feedback = 'Password is too weak';
+            } else if (score < 4) {
+                strengthBar.classList.add('strength-fair');
+                feedback = 'Password strength: Fair';
+            } else if (score < 5) {
+                strengthBar.classList.add('strength-good');
+                feedback = 'Password strength: Good';
+            } else {
+                strengthBar.classList.add('strength-strong');
+                feedback = 'Password strength: Strong';
+            }
+            
+            strengthText.textContent = password.length > 0 ? feedback : '';
+            return score >= 4;
+        }
+
+        // Real-time password strength checking
+        document.getElementById('password').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+
+        // Enhanced email validation
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show message function
+        function showMessage(type, message) {
+            const successMsg = document.getElementById('successMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            // Hide both messages first
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            if (type === 'success') {
+                successMsg.textContent = message;
+                successMsg.style.display = 'block';
+            } else {
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const referral = document.getElementById('referral').value.trim();
+            const signupBtn = document.getElementById('signupBtn');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            // Validate email
+            if (!validateEmail(email)) {
+                showMessage('error', 'Please enter a valid email address.');
+                return;
+            }
+
+            // Validate password strength
+            if (!checkPasswordStrength(password)) {
+                showMessage('error', 'Password must be at least 8 characters with uppercase, lowercase, number, and special character.');
+                return;
+            }
+
+            // Show loading state
+            signupBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+            buttonText.textContent = 'Creating Account...';
+
+            try {
+                // Here you would normally send data to your backend
+                // For now, we'll simulate the API call
+                const response = await simulateSignup(email, password, referral);
+                
+                if (response.success) {
+                    showMessage('success', '🎉 Account created successfully! Check your email to verify your account.');
+                    document.getElementById('signupForm').reset();
+                    document.getElementById('strengthBar').className = 'strength-bar';
+                    document.getElementById('strengthText').textContent = '';
+                } else {
+                    showMessage('error', response.message || 'Signup failed. Please try again.');
+                }
+            } catch (error) {
+                showMessage('error', 'Network error. Please check your connection and try again.');
+            } finally {
+                // Reset button state
+                signupBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+                buttonText.textContent = 'Create Account';
+            }
+        });
+
+        // Simulate signup API call (replace with real API)
+        async function simulateSignup(email, password, referral) {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Simulate different responses
+            if (email === 'test@example.com') {
+                return { success: false, message: 'This email is already registered.' };
+            }
+            
+            // For demo purposes, always return success
+            return { 
+                success: true, 
+                message: 'Account created successfully!',
+                user: { email, referral }
+            };
+        }
+
+        // Social signup handlers (replace with real OAuth implementation)
+        document.getElementById('googleSignup').addEventListener('click', function() {
+            showMessage('error', 'Google signup will be available soon!');
+            // window.location.href = '/auth/google';
+        });
+
+        document.getElementById('githubSignup').addEventListener('click', function() {
+            showMessage('error', 'GitHub signup will be available soon!');
+            // window.location.href = '/auth/github';
+        });
+
+        document.getElementById('linkedinSignup').addEventListener('click', function() {
+            showMessage('error', 'LinkedIn signup will be available soon!');
+            // window.location.href = '/auth/linkedin';
+        });
+
+        // Clear messages when user starts typing
+        ['email', 'password'].forEach(id => {
+            document.getElementById(id).addEventListener('input', function() {
+                document.getElementById('successMsg').style.display = 'none';
+                document.getElementById('errorMsg').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

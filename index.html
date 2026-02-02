@@ -1,0 +1,3161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickHire AI – AI-Powered Career Success Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Theme */
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --primary: #818cf8;
+            --primary-dark: #6366f1;
+            --secondary: #f472b6;
+            --accent: #22d3ee;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --error: #f87171;
+            --dark: #f3f4f6;
+            --light: #1f2937;
+            --text: #e5e7eb;
+            --text-light: #9ca3af;
+            --border: #374151;
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            background: var(--bg-secondary);
+            border-left: 4px solid;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--error);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        .toast.info {
+            border-left-color: var(--accent);
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+
+        .toast-success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast-error .toast-icon {
+            color: var(--error);
+        }
+
+        .toast-warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-info .toast-icon {
+            color: var(--accent);
+        }
+
+        .toast-close {
+            margin-left: auto;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(var(--bg-primary-rgb), 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a:focus {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .nav-links .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+        }
+
+        .nav-links .btn-primary:hover, .nav-links .btn-primary:focus {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            padding: 0.5rem 0;
+            min-width: 200px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover, .dropdown-item:focus {
+            background: rgba(var(--primary-rgb), 0.1);
+            outline: none;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 0;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .hero-feature {
+            background: rgba(var(--primary-rgb), 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            color: var(--text);
+            font-weight: 600;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Credits Section */
+        .credits-section {
+            background: var(--bg-secondary);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .credits-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .credits-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .credit-count {
+            background: var(--gradient-3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .plan-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .plan-free { 
+            background: var(--gradient-2); 
+            color: white; 
+        }
+        .plan-starter { 
+            background: var(--success); 
+            color: white; 
+        }
+        .plan-pro { 
+            background: var(--primary); 
+            color: white; 
+        }
+        .plan-ultimate { 
+            background: var(--gradient); 
+            color: white; 
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-error {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.3);
+        }
+
+        /* Form Section */
+        .form-section {
+            background: var(--bg-secondary);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .form-tabs {
+            display: flex;
+            background: var(--bg-primary);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            gap: 0.5rem;
+        }
+
+        .form-tab {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .form-tab.active {
+            background: var(--bg-secondary);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .form-tab:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-primary);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-error {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-group.error .form-error {
+            display: block;
+        }
+
+        .form-group.error input,
+        .form-group.error textarea,
+        .form-group.error select {
+            border-color: var(--error);
+        }
+
+        .skills-input {
+            position: relative;
+        }
+
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .skill-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-tag .remove {
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .skill-tag .remove:hover {
+            opacity: 1;
+        }
+
+        /* Document Type Selection */
+        .document-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .document-type {
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .document-type:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .document-type.selected {
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), 0.05);
+        }
+
+        .document-type:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .document-type-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .document-type-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--dark);
+        }
+
+        .document-type-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Generate Button */
+        .generate-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .generate-btn {
+            background: var(--gradient);
+            color: white;
+            padding: 1.25rem 3rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .generate-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.3);
+        }
+
+        .generate-btn .loading {
+            display: none;
+            animation: spin 1s linear infinite;
+        }
+
+        .generate-btn.loading .loading {
+            display: inline-block;
+        }
+
+        .generate-btn.loading .text {
+            display: none;
+        }
+
+        /* Features Section */
+        .features-section {
+            margin-top: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .feature-desc {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg-primary);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            background: var(--gradient);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Document Preview */
+        .preview-container {
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .preview-content {
+            background: white;
+            color: #333;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* Animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.75rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.25rem;
+            }
+
+            .hero-features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .credits-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .quick-actions {
+                justify-content: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .document-types {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+            
+            .document-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .main-container {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .form-section {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.show {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav-links a {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+        }
+
+        .language-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .language-btn:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            padding: 0.5rem 0;
+            min-width: 150px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .language-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .language-option {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .language-option:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+        }
+
+        .language-flag {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        /* ARIA Improvements */
+        [aria-hidden="true"] {
+            display: none;
+        }
+
+        /* Focus styles for accessibility */
+        a:focus, button:focus, input:focus, select:focus, textarea:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Skip to content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            z-index: 100;
+            transition: top 0.3s ease;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Print styles for PDF */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .preview-content, .preview-content * {
+                visibility: visible;
+            }
+            .preview-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="nav-container">
+            <div class="nav-logo" onclick="showHome()" tabindex="0" role="button" aria-label="QuickHire AI Logo">
+                <i class="fas fa-rocket"></i> QuickHire AI
+            </div>
+
+            <div class="nav-actions">
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+
+                <!-- Profile Button -->
+                <button class="theme-toggle" id="profileBtn" aria-label="Profile" style="margin-left: 0.5rem;">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+
+                <!-- Language Selector -->
+                <div class="language-selector">
+                    <button class="language-btn" id="languageBtn" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
+                        <span id="currentLanguage">EN</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="language-dropdown" id="languageDropdown">
+                        <div class="language-option" onclick="changeLanguage('en')">
+                            <img src="https://flagcdn.com/w20/gb.png" class="language-flag" alt="English">
+                            <span>English</span>
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('es')">
+                            <img src="https://flagcdn.com/w20/es.png" class="language-flag" alt="Spanish">
+                            <span>Español</span>
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('fr')">
+                            <img src="https://flagcdn.com/w20/fr.png" class="language-flag" alt="French">
+                            <span>Français</span>
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('de')">
+                            <img src="https://flagcdn.com/w20/de.png" class="language-flag" alt="German">
+                            <span>Deutsch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Desktop Navigation -->
+                <div class="nav-links">
+                    <a href="#features" aria-label="Features">Features</a>
+                    <a href="#" onclick="showPricing()" aria-label="Pricing">Pricing</a>
+                    <a href="#" onclick="showSignup()" aria-label="Sign up">Sign Up</a>
+                    <a href="#" onclick="showLogin()" aria-label="Login">Login</a>
+                    <a href="#" class="btn-primary" onclick="showUpgrade()" aria-label="Upgrade">
+                        <i class="fas fa-crown"></i> Upgrade
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="nav-logo" onclick="showHome()">
+                <i class="fas fa-rocket"></i> QuickHire AI
+            </div>
+            <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="mobile-nav-links" aria-label="Mobile navigation">
+            <a href="#features" onclick="closeMobileMenu()">Features</a>
+            <a href="#" onclick="showPricing(); closeMobileMenu()">Pricing</a>
+            <a href="#" onclick="showSignup(); closeMobileMenu()">Sign Up</a>
+            <a href="#" onclick="showLogin(); closeMobileMenu()">Login</a>
+            <a href="#" onclick="showUpgrade(); closeMobileMenu()">Upgrade Plan</a>
+            <a href="#" onclick="showHistory(); closeMobileMenu()">My Documents</a>
+            <a href="#" onclick="showSupport(); closeMobileMenu()">Support</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-container">
+        <!-- Hero Section -->
+        <section class="hero-section fade-in-up">
+            <h1 class="hero-title" id="heroTitle">AI-Powered Career Success</h1>
+            <p class="hero-subtitle" id="heroSubtitle">
+                Transform your career with AI-generated resumes, cover letters, and LinkedIn profiles that get you hired faster
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-magic"></i> <span id="feature1">AI-Powered Generation</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-rocket"></i> <span id="feature2">ATS-Optimized</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-chart-line"></i> <span id="feature3">Interview Prep</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-shield-alt"></i> <span id="feature4">Privacy Secure</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Credits Section -->
+        <section class="credits-section fade-in-up">
+            <div class="credits-header">
+                <div class="credits-info">
+                    <div class="credit-count">
+                        <i class="fas fa-coins"></i>
+                        <span id="credit-count">1</span> <span id="creditsText">Credits</span>
+                    </div>
+                    <div class="plan-badge plan-free" id="plan-badge">
+                        <i class="fas fa-gift"></i> <span id="planText">Free Plan</span>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="showUpgrade()" aria-label="Upgrade plan">
+                        <i class="fas fa-crown"></i> <span id="upgradeText">Upgrade Plan</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="showReferral()" aria-label="Invite friends">
+                        <i class="fas fa-user-plus"></i> <span id="inviteText">Invite Friends</span>
+                    </button>
+                    <button class="btn btn-success" onclick="showHistory()" aria-label="View my documents">
+                        <i class="fas fa-history"></i> <span id="documentsText">My Documents</span>
+                    </button>
+                    <button class="btn btn-accent" onclick="showCreditModal()" aria-label="Buy credits">
+                        <i class="fas fa-coins"></i> Buy Credits
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Form Section -->
+        <section class="form-section fade-in-up" aria-labelledby="formTitle">
+            <div class="form-header">
+                <h2 class="form-title" id="formTitle">Build Your Career Toolkit</h2>
+                <p class="form-subtitle" id="formSubtitle">
+                    Fill out your information and let AI create professional documents that stand out
+                </p>
+            </div>
+
+            <!-- Form Tabs -->
+            <div class="form-tabs" role="tablist">
+                <button class="form-tab active" onclick="switchTab('basic')" role="tab" aria-selected="true" aria-controls="basic-tab" id="basic-tab-btn">
+                    <i class="fas fa-user"></i> <span id="basicTabText">Basic Info</span>
+                </button>
+                <button class="form-tab" onclick="switchTab('experience')" role="tab" aria-selected="false" aria-controls="experience-tab" id="experience-tab-btn">
+                    <i class="fas fa-briefcase"></i> <span id="experienceTabText">Experience</span>
+                </button>
+                <button class="form-tab" onclick="switchTab('preferences')" role="tab" aria-selected="false" aria-controls="preferences-tab" id="preferences-tab-btn">
+                    <i class="fas fa-cog"></i> <span id="preferencesTabText">Preferences</span>
+                </button>
+            </div>
+
+            <form id="careerForm" novalidate>
+                <!-- Basic Info Tab -->
+                <div class="tab-content" id="basic-tab" role="tabpanel" aria-labelledby="basic-tab-btn">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="currentPosition">
+                                <i class="fas fa-user-tie"></i> <span id="currentPositionLabel">Current Job Title</span>
+                            </label>
+                            <input type="text" id="currentPosition" placeholder="e.g. Software Developer" required aria-required="true">
+                            <div class="form-error" id="currentPositionError">Please enter your current job title</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="yearsExperience">
+                                <i class="fas fa-calendar-alt"></i> <span id="yearsExperienceLabel">Years of Experience</span>
+                            </label>
+                            <input type="number" id="yearsExperience" min="0" max="50" placeholder="e.g. 3" required aria-required="true">
+                            <div class="form-error" id="yearsExperienceError">Please enter your years of experience</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="industry">
+                                <i class="fas fa-building"></i> <span id="industryLabel">Industry</span>
+                            </label>
+                            <select id="industry" required aria-required="true">
+                                <option value="">Select your industry</option>
+                                <option value="technology">Technology</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="finance">Finance</option>
+                                <option value="education">Education</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="sales">Sales</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="form-error" id="industryError">Please select your industry</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="targetPosition">
+                                <i class="fas fa-bullseye"></i> <span id="targetPositionLabel">Target Position</span>
+                            </label>
+                            <input type="text" id="targetPosition" placeholder="e.g. Senior Software Engineer" required aria-required="true">
+                            <div class="form-error" id="targetPositionError">Please enter your target position</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="education">
+                            <i class="fas fa-graduation-cap"></i> <span id="educationLabel">Education Background</span>
+                        </label>
+                        <textarea id="education" rows="3" placeholder="Your degrees, certifications, schools, and relevant coursework..." aria-describedby="educationDesc"></textarea>
+                        <div id="educationDesc" class="visually-hidden">Enter your educational background including degrees, certifications, and relevant coursework</div>
+                    </div>
+
+                    <div class="form-group skills-input">
+                        <label for="skills">
+                            <i class="fas fa-tools"></i> <span id="skillsLabel">Key Skills</span>
+                        </label>
+                        <input type="text" id="skills" placeholder="Type a skill and press Enter" onkeypress="addSkill(event)" aria-describedby="skillsDesc">
+                        <div id="skillsDesc" class="visually-hidden">Add your key skills by typing them and pressing Enter</div>
+                        <div class="skills-tags" id="skills-tags" aria-live="polite"></div>
+                    </div>
+                </div>
+
+                <!-- Experience Tab -->
+                <div class="tab-content" id="experience-tab" role="tabpanel" aria-labelledby="experience-tab-btn" style="display: none;">
+                    <div class="form-group">
+                        <label for="experience">
+                            <i class="fas fa-briefcase"></i> <span id="experienceLabel">Work Experience Summary</span>
+                        </label>
+                        <textarea id="experience" rows="6" placeholder="Describe your key roles, responsibilities, and professional journey..." aria-describedby="experienceDesc"></textarea>
+                        <div id="experienceDesc" class="visually-hidden">Describe your work experience including key roles and responsibilities</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="achievements">
+                            <i class="fas fa-trophy"></i> <span id="achievementsLabel">Key Achievements</span>
+                        </label>
+                        <textarea id="achievements" rows="4" placeholder="Awards, promotions, recognitions, quantifiable results..." aria-describedby="achievementsDesc"></textarea>
+                        <div id="achievementsDesc" class="visually-hidden">List your key professional achievements including awards and quantifiable results</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projects">
+                            <i class="fas fa-project-diagram"></i> <span id="projectsLabel">Notable Projects</span>
+                        </label>
+                        <textarea id="projects" rows="4" placeholder="Describe significant projects you've worked on..." aria-describedby="projectsDesc"></textarea>
+                        <div id="projectsDesc" class="visually-hidden">Describe notable projects you've worked on including your role and outcomes</div>
+                    </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div class="tab-content" id="preferences-tab" role="tabpanel" aria-labelledby="preferences-tab-btn" style="display: none;">
+                    <div class="form-group">
+                        <label for="tone">
+                            <i class="fas fa-palette"></i> <span id="toneLabel">Writing Tone</span>
+                        </label>
+                        <select id="tone" aria-describedby="toneDesc">
+                            <option value="professional">Professional</option>
+                            <option value="creative">Creative</option>
+                            <option value="executive">Executive</option>
+                            <option value="technical">Technical</option>
+                            <option value="casual">Casual</option>
+                        </select>
+                        <div id="toneDesc" class="visually-hidden">Select the tone you want for your documents</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-file-alt"></i> <span id="documentsLabel">Document Types to Generate</span>
+                        </label>
+                        <div class="document-types" role="group" aria-labelledby="documentsLabel">
+                            <div class="document-type selected" data-type="resume" tabindex="0" role="checkbox" aria-checked="true">
+                                <div class="document-type-icon">
+                                    <i class="fas fa-file-user"></i>
+                                </div>
+                                <div class="document-type-title" id="resumeLabel">Resume</div>
+                                <div class="document-type-desc">ATS-optimized professional resume</div>
+                            </div>
+                            <div class="document-type selected" data-type="cover_letter" tabindex="0" role="checkbox" aria-checked="true">
+                                <div class="document-type-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="document-type-title" id="coverLetterLabel">Cover Letter</div>
+                                <div class="document-type-desc">Compelling cover letter</div>
+                            </div>
+                            <div class="document-type selected" data-type="linkedin_bio" tabindex="0" role="checkbox" aria-checked="true">
+                                <div class="document-type-icon">
+                                    <i class="fab fa-linkedin"></i>
+                                </div>
+                                <div class="document-type-title" id="linkedinLabel">LinkedIn Bio</div>
+                                <div class="document-type-desc">Professional LinkedIn summary</div>
+                            </div>
+                            <div class="document-type" data-type="interview_prep" tabindex="0" role="checkbox" aria-checked="false">
+                                <div class="document-type-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="document-type-title" id="interviewLabel">Interview Prep</div>
+                                <div class="document-type-desc">Custom interview questions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobDescription">
+                            <i class="fas fa-clipboard-list"></i> <span id="jobDescriptionLabel">Target Job Description (Optional)</span>
+                        </label>
+                        <textarea id="jobDescription" rows="4" placeholder="Paste the job description to optimize your documents for this specific role..." aria-describedby="jobDescriptionDesc"></textarea>
+                        <div id="jobDescriptionDesc" class="visually-hidden">Optionally paste a job description to tailor your documents</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">Generating your documents...</div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="generate-section">
+                    <button type="submit" class="generate-btn" id="generateBtn" aria-live="polite">
+                        <i class="fas fa-magic text"></i>
+                        <span class="text" id="generateText">Generate My Career Toolkit</span>
+                        <i class="fas fa-spinner loading"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features" aria-labelledby="featuresTitle">
+            <div class="hero-section">
+                <h2 class="hero-title" id="featuresTitle" style="font-size: 2.5rem;">Why Choose QuickHire AI?</h2>
+                <p class="hero-subtitle" id="featuresSubtitle">Advanced AI technology meets career expertise to give you the competitive edge</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title" id="featureTitle1">AI-Powered Generation</h3>
+                    <p class="feature-desc" id="featureDesc1">Our advanced AI analyzes thousands of successful resumes to create documents that get results</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="feature-title" id="featureTitle2">ATS Optimization</h3>
+                    <p class="feature-desc" id="featureDesc2">Documents designed to pass Applicant Tracking Systems and reach human recruiters</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="feature-title" id="featureTitle3">Privacy First</h3>
+                    <p class="feature-desc" id="featureDesc3">Your data is encrypted and secure, ensuring complete privacy and protection</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="feature-title" id="featureTitle4">Fast & Easy</h3>
+                    <p class="feature-desc" id="featureDesc4">Generate professional documents in minutes with our intuitive interface</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer-section" style="background: var(--dark); color: white; padding: 3rem 2rem; margin-top: 4rem;">
+            <div class="main-container" style="padding: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                    <div>
+                        <div class="nav-logo" style="font-size: 1.5rem;">
+                            <i class="fas fa-rocket"></i> QuickHire AI
+                        </div>
+                        <p style="color: var(--text-light); margin-top: 0.5rem;">Empowering your career with AI-driven solutions</p>
+                    </div>
+                    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                        <div>
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Quick Links</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li><a href="#features" style="color: var(--text-light); text-decoration: none;">Features</a></li>
+                                <li><a href="#" style="color: var(--text-light); text-decoration: none;" onclick="showPricing()">Pricing</a></li>
+                                <li><a href="#" style="color: var(--text-light); text-decoration: none;" onclick="showSupport()">Support</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Connect</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li><a href="#" style="color: var(--text-light); text-decoration: none;"><i class="fab fa-twitter"></i> Twitter</a></li>
+                                <li><a href="#" style="color: var(--text-light); text-decoration: none;"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                                <li><a href="#" style="color: var(--text-light); text-decoration: none;"><i class="fas fa-envelope"></i> Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 2rem; color: var(--text-light); font-size: 0.9rem;">
+                    © 2025 QuickHire AI. All rights reserved.
+                </div>
+            </div>
+        </footer>
+
+        <!-- Success Modal -->
+        <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle" aria-describedby="successModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                </div>
+                <h3 class="modal-title" id="successModalTitle">Documents Generated!</h3>
+                <p class="modal-desc" id="successModalDesc">Your career toolkit has been successfully created. Check your email or download it from your dashboard.</p>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="downloadDocuments()">
+                        <i class="fas fa-download"></i> Download Now
+                    </button>
+                    <button class="btn btn-secondary" onclick="showHistory()">
+                        <i class="fas fa-history"></i> View in Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Preview Modal -->
+        <div class="modal" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+            <div class="preview-container">
+                <div class="preview-header">
+                    <h3 class="preview-title" id="previewModalTitle">Document Preview</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="printDocument()">
+                            <i class="fas fa-print"></i> Print/PDF
+                        </button>
+                        <button class="btn btn-accent" onclick="exportWord()">
+                            <i class="fas fa-file-word"></i> Export Word
+                        </button>
+                        <button class="btn btn-secondary" onclick="enableEditPreview()">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                </div>
+                <div class="preview-content" id="previewContent" contenteditable="false">
+                    <!-- Preview content will be inserted here -->
+                </div>
+                <div class="modal-actions" style="margin-top: 1.5rem;">
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div class="modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle" aria-describedby="loginModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-sign-in-alt" style="color: var(--primary);"></i>
+                </div>
+                <h3 class="modal-title" id="loginModalTitle">Welcome Back!</h3>
+                <p class="modal-desc" id="loginModalDesc">Sign in to access your account and continue your career journey</p>
+                
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required aria-required="true">
+                        <div class="form-error" id="loginEmailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required aria-required="true">
+                        <div class="form-error" id="loginPasswordError">Please enter your password</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                    
+                    <div class="auth-toggle">
+                        Don't have an account? <a onclick="showSignup()">Sign up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Signup Modal -->
+        <div class="modal" id="signupModal" role="dialog" aria-modal="true" aria-labelledby="signupModalTitle" aria-describedby="signupModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-user-plus" style="color: var(--primary);"></i>
+                </div>
+                <h3 class="modal-title" id="signupModalTitle">Create Your Account</h3>
+                <p class="modal-desc" id="signupModalDesc">Join QuickHire AI to start building your perfect career toolkit</p>
+                
+                <form class="auth-form" id="signupForm">
+                    <div class="form-group">
+                        <label for="signupName">
+                            <i class="fas fa-user"></i> Full Name
+                        </label>
+                        <input type="text" id="signupName" placeholder="Your name" required aria-required="true">
+                        <div class="form-error" id="signupNameError">Please enter your name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupEmail">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input type="email" id="signupEmail" placeholder="your@email.com" required aria-required="true">
+                        <div class="form-error" id="signupEmailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupPassword">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input type="password" id="signupPassword" placeholder="Create a password" required aria-required="true" minlength="8">
+                        <div class="form-error" id="signupPasswordError">Password must be at least 8 characters</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                    
+                    <div class="auth-toggle">
+                        Already have an account? <a onclick="showLogin()">Sign in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Upgrade Modal -->
+        <div class="modal" id="upgradeModal" role="dialog" aria-modal="true" aria-labelledby="upgradeModalTitle" aria-describedby="upgradeModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-crown" style="color: var(--warning);"></i>
+                </div>
+                <h3 class="modal-title" id="upgradeModalTitle">Upgrade Your Plan</h3>
+                <p class="modal-desc" id="upgradeModalDesc">Choose the plan that fits your needs and unlock more features</p>
+                
+                <div class="pricing-plans">
+                    <div class="pricing-plan" onclick="selectPlan('starter')" tabindex="0" role="button" aria-label="Starter Plan">
+                        <div class="plan-name">Starter</div>
+                        <div class="plan-price">$9.99/mo</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> 10 Credits/month</li>
+                            <li><i class="fas fa-check"></i> Basic Templates</li>
+                            <li><i class="fas fa-check"></i> Email Support</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pricing-plan popular" onclick="selectPlan('pro')" tabindex="0" role="button" aria-label="Professional Plan">
+                        <div class="popular-badge">POPULAR</div>
+                        <div class="plan-name">Professional</div>
+                        <div class="plan-price">$19.99/mo</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> 30 Credits/month</li>
+                            <li><i class="fas fa-check"></i> Premium Templates</li>
+                            <li><i class="fas fa-check"></i> Priority Support</li>
+                            <li><i class="fas fa-check"></i> Interview Prep</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pricing-plan" onclick="selectPlan('ultimate')" tabindex="0" role="button" aria-label="Ultimate Plan">
+                        <div class="plan-name">Ultimate</div>
+                        <div class="plan-price">$29.99/mo</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Unlimited Credits</li>
+                            <li><i class="fas fa-check"></i> All Templates</li>
+                            <li><i class="fas fa-check"></i> 24/7 Support</li>
+                            <li><i class="fas fa-check"></i> Career Coaching</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="completeUpgrade()">
+                        <i class="fas fa-check"></i> Upgrade Now
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Maybe Later
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral Modal -->
+        <div class="modal" id="referralModal" role="dialog" aria-modal="true" aria-labelledby="referralModalTitle" aria-describedby="referralModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-user-plus" style="color: var(--secondary);"></i>
+                </div>
+                <h3 class="modal-title" id="referralModalTitle">Invite Friends & Earn Credits</h3>
+                <p class="modal-desc" id="referralModalDesc">Share your referral link and get 1 credit for each friend who signs up</p>
+                
+                <div class="referral-section">
+                    <p>Your unique referral code:</p>
+                    <div class="referral-code" id="referralCode">QUICKHIRE-5X8Y9Z</div>
+                    
+                    <div class="social-share">
+                        <button class="share-btn facebook" onclick="shareOnFacebook()" aria-label="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="share-btn twitter" onclick="shareOnTwitter()" aria-label="Share on Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="share-btn linkedin" onclick="shareOnLinkedIn()" aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </button>
+                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()" aria-label="Share on WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="share-btn email" onclick="shareViaEmail()" aria-label="Share via Email">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="copyReferralCode()">
+                        <i class="fas fa-copy"></i> Copy Link
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents History Modal -->
+        <div class="modal" id="historyModal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle" aria-describedby="historyModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-history" style="color: var(--primary);"></i>
+                </div>
+                <h3 class="modal-title" id="historyModalTitle">My Documents</h3>
+                <p class="modal-desc" id="historyModalDesc">View and manage all your generated career documents</p>
+                
+                <div class="documents-grid" id="documentsGrid">
+                    <!-- Documents will be dynamically inserted here -->
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Modal -->
+        <div class="modal" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle" aria-describedby="supportModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-headset" style="color: var(--accent);"></i>
+                </div>
+                <h3 class="modal-title" id="supportModalTitle">How Can We Help?</h3>
+                <p class="modal-desc" id="supportModalDesc">Contact our support team for any questions or issues</p>
+                
+                <form class="support-form" id="supportForm">
+                    <div class="form-group">
+                        <label for="supportName">
+                            <i class="fas fa-user"></i> Your Name
+                        </label>
+                        <input type="text" id="supportName" placeholder="Your name" required aria-required="true">
+                        <div class="form-error" id="supportNameError">Please enter your name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="supportEmail">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input type="email" id="supportEmail" placeholder="your@email.com" required aria-required="true">
+                        <div class="form-error" id="supportEmailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="supportSubject">
+                            <i class="fas fa-tag"></i> Subject
+                        </label>
+                        <select id="supportSubject" required aria-required="true">
+                            <option value="">Select a subject</option>
+                            <option value="general">General Question</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="billing">Billing Inquiry</option>
+                            <option value="feedback">Feedback</option>
+                        </select>
+                        <div class="form-error" id="supportSubjectError">Please select a subject</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="supportMessage">
+                            <i class="fas fa-comment"></i> Message
+                        </label>
+                        <textarea id="supportMessage" rows="4" placeholder="How can we help you?" required aria-required="true"></textarea>
+                        <div class="form-error" id="supportMessageError">Please enter your message</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Pricing Modal -->
+        <div class="modal" id="pricingModal" role="dialog" aria-modal="true" aria-labelledby="pricingModalTitle" aria-describedby="pricingModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-tags" style="color: var(--primary);"></i>
+                </div>
+                <h3 class="modal-title" id="pricingModalTitle">Choose Your Plan</h3>
+                <p class="modal-desc" id="pricingModalDesc">Select the perfect plan for your career needs</p>
+                
+                <div class="pricing-plans">
+                    <div class="pricing-plan" onclick="selectPlan('free')" tabindex="0" role="button" aria-label="Free Plan">
+                        <div class="plan-name">Free</div>
+                        <div class="plan-price">$0/mo</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> 1 Credit/month</li>
+                            <li><i class="fas fa-check"></i> Basic Templates</li>
+                            <li><i class="fas fa-check"></i> Community Support</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pricing-plan popular" onclick="selectPlan('pro')" tabindex="0" role="button" aria-label="Professional Plan">
+                        <div class="popular-badge">POPULAR</div>
+                        <div class="plan-name">Professional</div>
+                        <div class="plan-price">$19.99/mo</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> 30 Credits/month</li>
+                            <li><i class="fas fa-check"></i> Premium Templates</li>
+                            <li><i class="fas fa-check"></i> Priority Support</li>
+                            <li><i class="fas fa-check"></i> Interview Prep</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pricing-plan" onclick="selectPlan('ultimate')" tabindex="0" role="button" aria-label="Ultimate Plan">
+                        <div class="plan-name">Ultimate</div>
+                        <div class="plan-price">$29.99/mo</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Unlimited Credits</li>
+                            <li><i class="fas fa-check"></i> All Templates</li>
+                            <li><i class="fas fa-check"></i> 24/7 Support</li>
+                            <li><i class="fas fa-check"></i> Career Coaching</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="completeUpgrade()">
+                        <i class="fas fa-check"></i> Get Started
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credit Purchase Modal -->
+        <div class="modal" id="creditModal" role="dialog" aria-modal="true" aria-labelledby="creditModalTitle" aria-describedby="creditModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-coins" style="color: var(--success);"></i>
+                </div>
+                <h3 class="modal-title" id="creditModalTitle">Buy More Credits</h3>
+                <p class="modal-desc" id="creditModalDesc">Purchase additional credits to generate more documents</p>
+                <form id="creditForm">
+                    <div class="form-group">
+                        <label for="creditAmount"><i class="fas fa-coins"></i> Amount</label>
+                        <select id="creditAmount">
+                            <option value="5">5 Credits - $4.99</option>
+                            <option value="10">10 Credits - $8.99</option>
+                            <option value="30">30 Credits - $19.99</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-shopping-cart"></i> Buy Now</button>
+                </form>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div class="modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" aria-describedby="profileModalDesc">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-user-circle" style="color: var(--primary);"></i>
+                </div>
+                <h3 class="modal-title" id="profileModalTitle">My Profile</h3>
+                <p class="modal-desc" id="profileModalDesc">Update your account information</p>
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="profileName"><i class="fas fa-user"></i> Name</label>
+                        <input type="text" id="profileName" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileEmail"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="profileEmail" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePassword"><i class="fas fa-lock"></i> New Password</label>
+                        <input type="password" id="profilePassword" minlength="8" placeholder="Leave blank to keep current password">
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                </form>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global State
+        const state = {
+            currentUser: {
+                name: "Guest",
+                email: "",
+                credits: 1,
+                plan: "free",
+                documents: [
+                    {
+                        id: 1,
+                        type: "resume",
+                        title: "Senior Software Engineer",
+                        description: "Optimized for technology roles with 5+ years experience",
+                        date: "Jun 28, 2025",
+                        content: "<h1>John Doe</h1><p>Senior Software Engineer</p>"
+                    },
+                    {
+                        id: 2,
+                        type: "cover_letter",
+                        title: "Product Manager Application",
+                        description: "Tailored for startup environment with leadership focus",
+                        date: "Jun 25, 2025",
+                        content: "<h1>Cover Letter</h1><p>Dear Hiring Manager...</p>"
+                    },
+                    {
+                        id: 3,
+                        type: "linkedin_bio",
+                        title: "Marketing Professional Profile",
+                        description: "Highlighting digital marketing expertise and achievements",
+                        date: "Jun 20, 2025",
+                        content: "<h1>LinkedIn Profile</h1><p>Marketing professional with 5+ years...</p>"
+                    }
+                ],
+                token: null
+            },
+            selectedPlan: "",
+            skills: ["JavaScript", "React", "Node.js"],
+            currentTheme: localStorage.getItem('theme') || 'light',
+            currentLanguage: localStorage.getItem('language') || 'en',
+            translations: {
+                en: {
+                    heroTitle: "AI-Powered Career Success",
+                    heroSubtitle: "Transform your career with AI-generated resumes, cover letters, and LinkedIn profiles that get you hired faster",
+                    feature1: "AI-Powered Generation",
+                    feature2: "ATS-Optimized",
+                    feature3: "Interview Prep",
+                    feature4: "Privacy Secure",
+                    creditsText: "Credits",
+                    planText: "Free Plan",
+                    upgradeText: "Upgrade Plan",
+                    inviteText: "Invite Friends",
+                    documentsText: "My Documents",
+                    formTitle: "Build Your Career Toolkit",
+                    formSubtitle: "Fill out your information and let AI create professional documents that stand out",
+                    basicTabText: "Basic Info",
+                    experienceTabText: "Experience",
+                    preferencesTabText: "Preferences",
+                    currentPositionLabel: "Current Job Title",
+                    yearsExperienceLabel: "Years of Experience",
+                    industryLabel: "Industry",
+                    targetPositionLabel: "Target Position",
+                    educationLabel: "Education Background",
+                    skillsLabel: "Key Skills",
+                    experienceLabel: "Work Experience Summary",
+                    achievementsLabel: "Key Achievements",
+                    projectsLabel: "Notable Projects",
+                    toneLabel: "Writing Tone",
+                    documentsLabel: "Document Types to Generate",
+                    jobDescriptionLabel: "Target Job Description (Optional)",
+                    generateText: "Generate My Career Toolkit",
+                    featuresTitle: "Why Choose QuickHire AI?",
+                    featuresSubtitle: "Advanced AI technology meets career expertise to give you the competitive edge",
+                    featureTitle1: "AI-Powered Generation",
+                    featureDesc1: "Our advanced AI analyzes thousands of successful resumes to create documents that get results",
+                    featureTitle2: "ATS Optimization",
+                    featureDesc2: "Documents designed to pass Applicant Tracking Systems and reach human recruiters",
+                    featureTitle3: "Privacy First",
+                    featureDesc3: "Your data is encrypted and secure, ensuring complete privacy and protection",
+                    featureTitle4: "Fast & Easy",
+                    featureDesc4: "Generate professional documents in minutes with our intuitive interface"
+                },
+                es: {
+                    heroTitle: "Éxito profesional con IA",
+                    heroSubtitle: "Transforma tu carrera con currículums, cartas de presentación y perfiles de LinkedIn generados por IA que te consiguen trabajo más rápido",
+                    feature1: "Generación con IA",
+                    feature2: "Optimizado para ATS",
+                    feature3: "Preparación para entrevistas",
+                    feature4: "Privacidad segura",
+                    creditsText: "Créditos",
+                    planText: "Plan Gratis",
+                    upgradeText: "Mejorar Plan",
+                    inviteText: "Invitar Amigos",
+                    documentsText: "Mis Documentos",
+                    formTitle: "Construye tu Kit de Herramientas Profesionales",
+                    formSubtitle: "Completa tu información y deja que la IA cree documentos profesionales que destaquen",
+                    basicTabText: "Información Básica",
+                    experienceTabText: "Experiencia",
+                    preferencesTabText: "Preferencias",
+                    currentPositionLabel: "Puesto Actual",
+                    yearsExperienceLabel: "Años de Experiencia",
+                    industryLabel: "Industria",
+                    targetPositionLabel: "Puesto Objetivo",
+                    educationLabel: "Formación Académica",
+                    skillsLabel: "Habilidades Clave",
+                    experienceLabel: "Resumen de Experiencia Laboral",
+                    achievementsLabel: "Logros Principales",
+                    projectsLabel: "Proyectos Destacados",
+                    toneLabel: "Tono de Escritura",
+                    documentsLabel: "Tipos de Documentos a Generar",
+                    jobDescriptionLabel: "Descripción del Puesto Objetivo (Opcional)",
+                    generateText: "Generar Mi Kit Profesional",
+                    featuresTitle: "¿Por Qué Elegir QuickHire AI?",
+                    featuresSubtitle: "Tecnología avanzada de IA combinada con experiencia profesional para darte ventaja competitiva",
+                    featureTitle1: "Generación con IA",
+                    featureDesc1: "Nuestra IA avanzada analiza miles de currículums exitosos para crear documentos que obtienen resultados",
+                    featureTitle2: "Optimización para ATS",
+                    featureDesc2: "Documentos diseñados para pasar los Sistemas de Seguimiento de Candidatos y llegar a reclutadores humanos",
+                    featureTitle3: "Privacidad Primero",
+                    featureDesc3: "Tus datos están encriptados y seguros, garantizando privacidad total",
+                    featureTitle4: "Rápido y Fácil",
+                    featureDesc4: "Genera documentos profesionales en minutos con nuestra interfaz intuitiva"
+                },
+                fr: {
+                    heroTitle: "Succès professionnel avec IA",
+                    heroSubtitle: "Transformez votre carrière avec des CV, lettres de motivation et profils LinkedIn générés par IA qui vous font embaucher plus rapidement",
+                    feature1: "Génération par IA",
+                    feature2: "Optimisé pour ATS",
+                    feature3: "Préparation aux entretiens",
+                    feature4: "Confidentialité sécurisée",
+                    creditsText: "Crédits",
+                    planText: "Plan Gratuit",
+                    upgradeText: "Mettre à niveau",
+                    inviteText: "Inviter des Amis",
+                    documentsText: "Mes Documents",
+                    formTitle: "Construisez votre Boîte à Outils Professionnelle",
+                    formSubtitle: "Remplissez vos informations et laissez l'IA créer des documents professionnels qui se démarquent",
+                    basicTabText: "Informations de Base",
+                    experienceTabText: "Expérience",
+                    preferencesTabText: "Préférences",
+                    currentPositionLabel: "Poste Actuel",
+                    yearsExperienceLabel: "Années d'Expérience",
+                    industryLabel: "Industrie",
+                    targetPositionLabel: "Poste Cible",
+                    educationLabel: "Formation",
+                    skillsLabel: "Compétences Clés",
+                    experienceLabel: "Résumé de l'Expérience Professionnelle",
+                    achievementsLabel: "Réalisations Clés",
+                    projectsLabel: "Projets Notables",
+                    toneLabel: "Ton d'Écriture",
+                    documentsLabel: "Types de Documents à Générer",
+                    jobDescriptionLabel: "Description du Poste Cible (Optionnel)",
+                    generateText: "Générer ma Boîte à Outils",
+                    featuresTitle: "Pourquoi Choisir QuickHire AI?",
+                    featuresSubtitle: "Technologie IA avancée alliée à l'expertise professionnelle pour vous donner un avantage concurrentiel",
+                    featureTitle1: "Génération par IA",
+                    featureDesc1: "Notre IA avancée analyse des milliers de CV réussis pour créer des documents qui obtiennent des résultats",
+                    featureTitle2: "Optimisation ATS",
+                    featureDesc2: "Documents conçus pour passer les systèmes de suivi des candidats et atteindre les recruteurs humains",
+                    featureTitle3: "Confidentialité d'Abord",
+                    featureDesc3: "Vos données sont cryptées et sécurisées, garantissant une confidentialité totale",
+                    featureTitle4: "Rapide et Facile",
+                    featureDesc4: "Générez des documents professionnels en quelques minutes avec notre interface intuitive"
+                },
+                de: {
+                    heroTitle: "KI-gestützter Karriereerfolg",
+                    heroSubtitle: "Verwandeln Sie Ihre Karriere mit KI-generierten Lebensläufen, Anschreiben und LinkedIn-Profilen, die Ihnen schneller zu einem Job verhelfen",
+                    feature1: "KI-gestützte Generierung",
+                    feature2: "ATS-optimiert",
+                    feature3: "Vorstellungsgespräch Vorbereitung",
+                    feature4: "Sicherer Datenschutz",
+                    creditsText: "Credits",
+                    planText: "Kostenloser Plan",
+                    upgradeText: "Plan upgraden",
+                    inviteText: "Freunde einladen",
+                    documentsText: "Meine Dokumente",
+                    formTitle: "Erstellen Sie Ihr Karriere-Toolkit",
+                    formSubtitle: "Füllen Sie Ihre Informationen aus und lassen Sie die KI professionelle Dokumente erstellen, die hervorstechen",
+                    basicTabText: "Grundinformationen",
+                    experienceTabText: "Erfahrung",
+                    preferencesTabText: "Einstellungen",
+                    currentPositionLabel: "Aktuelle Position",
+                    yearsExperienceLabel: "Jahre Erfahrung",
+                    industryLabel: "Branche",
+                    targetPositionLabel: "Zielposition",
+                    educationLabel: "Bildungshintergrund",
+                    skillsLabel: "Schlüsselfertigkeiten",
+                    experienceLabel: "Berufserfahrung Zusammenfassung",
+                    achievementsLabel: "Wichtige Erfolge",
+                    projectsLabel: "Bemerkenswerte Projekte",
+                    toneLabel: "Schreibstil",
+                    documentsLabel: "Zu erstellende Dokumenttypen",
+                    jobDescriptionLabel: "Ziel Stellenbeschreibung (Optional)",
+                    generateText: "Mein Karriere-Toolkit generieren",
+                    featuresTitle: "Warum QuickHire AI wählen?",
+                    featuresSubtitle: "Fortschrittliche KI-Technologie trifft auf Karriere-Expertise, um Ihnen einen Wettbewerbsvorteil zu verschaffen",
+                    featureTitle1: "KI-gestützte Generierung",
+                    featureDesc1: "Unsere fortschrittliche KI analysiert Tausende von erfolgreichen Lebensläufen, um Dokumente zu erstellen, die Ergebnisse liefern",
+                    featureTitle2: "ATS-Optimierung",
+                    featureDesc2: "Dokumente, die darauf ausgelegt sind, Bewerber-Tracking-Systeme zu passieren und menschliche Personalvermittler zu erreichen",
+                    featureTitle3: "Datenschutz an erster Stelle",
+                    featureDesc3: "Ihre Daten sind verschlüsselt und sicher, was vollständige Privatsphäre und Schutz gewährleistet",
+                    featureTitle4: "Schnell & Einfach",
+                    featureDesc4: "Generieren Sie professionelle Dokumente in Minuten mit unserer intuitiven Oberfläche"
+                }
+            }
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
+            initLanguage();
+            initEventListeners();
+            updateUI();
+            loadFormData();
+            
+            // Set up document type selection
+            document.querySelectorAll('.document-type').forEach(type => {
+                type.addEventListener('click', toggleDocumentType);
+                type.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        toggleDocumentType(e);
+                    }
+                });
+            });
+            
+            // Check for authentication token
+            checkAuth();
+        });
+
+        // Theme Functions
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                state.currentTheme = savedTheme;
+            }
+            applyTheme();
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', state.currentTheme);
+            const themeIcon = document.getElementById('themeIcon');
+            if (state.currentTheme === 'dark') {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        function toggleTheme() {
+            state.currentTheme = state.currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', state.currentTheme);
+            applyTheme();
+            showToast('Theme changed to ' + state.currentTheme, 'success');
+        }
+
+        // Language Functions
+        function initLanguage() {
+            const savedLanguage = localStorage.getItem('language');
+            if (savedLanguage) {
+                state.currentLanguage = savedLanguage;
+            }
+            applyLanguage();
+        }
+
+        function applyLanguage() {
+            const translation = state.translations[state.currentLanguage] || state.translations.en;
+            
+            // Update all translatable elements
+            document.getElementById('heroTitle').textContent = translation.heroTitle;
+            document.getElementById('heroSubtitle').textContent = translation.heroSubtitle;
+            document.getElementById('feature1').textContent = translation.feature1;
+            document.getElementById('feature2').textContent = translation.feature2;
+            document.getElementById('feature3').textContent = translation.feature3;
+            document.getElementById('feature4').textContent = translation.feature4;
+            document.getElementById('creditsText').textContent = translation.creditsText;
+            document.getElementById('planText').textContent = translation.planText;
+            document.getElementById('upgradeText').textContent = translation.upgradeText;
+            document.getElementById('inviteText').textContent = translation.inviteText;
+            document.getElementById('documentsText').textContent = translation.documentsText;
+            document.getElementById('formTitle').textContent = translation.formTitle;
+            document.getElementById('formSubtitle').textContent = translation.formSubtitle;
+            document.getElementById('basicTabText').textContent = translation.basicTabText;
+            document.getElementById('experienceTabText').textContent = translation.experienceTabText;
+            document.getElementById('preferencesTabText').textContent = translation.preferencesTabText;
+            document.getElementById('currentPositionLabel').textContent = translation.currentPositionLabel;
+            document.getElementById('yearsExperienceLabel').textContent = translation.yearsExperienceLabel;
+            document.getElementById('industryLabel').textContent = translation.industryLabel;
+            document.getElementById('targetPositionLabel').textContent = translation.targetPositionLabel;
+            document.getElementById('educationLabel').textContent = translation.educationLabel;
+            document.getElementById('skillsLabel').textContent = translation.skillsLabel;
+            document.getElementById('experienceLabel').textContent = translation.experienceLabel;
+            document.getElementById('achievementsLabel').textContent = translation.achievementsLabel;
+            document.getElementById('projectsLabel').textContent = translation.projectsLabel;
+            document.getElementById('toneLabel').textContent = translation.toneLabel;
+            document.getElementById('documentsLabel').textContent = translation.documentsLabel;
+            document.getElementById('jobDescriptionLabel').textContent = translation.jobDescriptionLabel;
+            document.getElementById('generateText').textContent = translation.generateText;
+            document.getElementById('featuresTitle').textContent = translation.featuresTitle;
+            document.getElementById('featuresSubtitle').textContent = translation.featuresSubtitle;
+            document.getElementById('featureTitle1').textContent = translation.featureTitle1;
+            document.getElementById('featureDesc1').textContent = translation.featureDesc1;
+            document.getElementById('featureTitle2').textContent = translation.featureTitle2;
+            document.getElementById('featureDesc2').textContent = translation.featureDesc2;
+            document.getElementById('featureTitle3').textContent = translation.featureTitle3;
+            document.getElementById('featureDesc3').textContent = translation.featureDesc3;
+            document.getElementById('featureTitle4').textContent = translation.featureTitle4;
+            document.getElementById('featureDesc4').textContent = translation.featureDesc4;
+            
+            // Update current language display
+            document.getElementById('currentLanguage').textContent = state.currentLanguage.toUpperCase();
+        }
+
+        function changeLanguage(lang) {
+            state.currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            applyLanguage();
+            showToast('Language changed to ' + lang.toUpperCase(), 'success');
+            closeLanguageDropdown();
+        }
+
+        function openLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.add('show');
+            document.getElementById('languageBtn').setAttribute('aria-expanded', 'true');
+        }
+
+        function closeLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.remove('show');
+            document.getElementById('languageBtn').setAttribute('aria-expanded', 'false');
+        }
+
+        // Toast Notification System (Enhanced)
+        function showToast(message, type = 'info', sticky = false) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.innerHTML = `
+                <i class="fas ${getToastIcon(type)} toast-icon"></i>
+                <div>${message}</div>
+                <button class="toast-close" aria-label="Close notification">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            if (!sticky) {
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, 5000);
+            }
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            });
+        }
+
+        function getToastIcon(type) {
+            switch(type) {
+                case 'success': return 'fa-check-circle';
+                case 'error': return 'fa-exclamation-circle';
+                case 'warning': return 'fa-exclamation-triangle';
+                default: return 'fa-info-circle';
+            }
+        }
+
+        // Authentication Functions
+        function checkAuth() {
+            const token = localStorage.getItem('quickHireToken');
+            if (token) {
+                // In a real app, you would validate the token with the backend
+                state.currentUser.token = token;
+                state.currentUser.email = localStorage.getItem('quickHireEmail') || '';
+                state.currentUser.name = localStorage.getItem('quickHireName') || 'User';
+                updateUI();
+                showToast('Welcome back, ' + state.currentUser.name, 'success');
+            }
+        }
+
+        function login(email, password) {
+            // In a real app, this would call your backend API
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const token = 'fake-jwt-token-' + Math.random().toString(36).substr(2);
+                    localStorage.setItem('quickHireToken', token);
+                    localStorage.setItem('quickHireEmail', email);
+                    localStorage.setItem('quickHireName', email.split('@')[0]);
+                    
+                    state.currentUser.token = token;
+                    state.currentUser.email = email;
+                    state.currentUser.name = email.split('@')[0];
+                    state.currentUser.credits = 3; // Bonus for login
+                    
+                    resolve(true);
+                }, 1000);
+            });
+        }
+
+        function signup(name, email, password) {
+            // In a real app, this would call your backend API
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const token = 'fake-jwt-token-' + Math.random().toString(36).substr(2);
+                    localStorage.setItem('quickHireToken', token);
+                    localStorage.setItem('quickHireEmail', email);
+                    localStorage.setItem('quickHireName', name);
+                    
+                    state.currentUser.token = token;
+                    state.currentUser.email = email;
+                    state.currentUser.name = name;
+                    state.currentUser.credits = 5; // Bonus for signup
+                    
+                    resolve(true);
+                }, 1000);
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('quickHireToken');
+            localStorage.removeItem('quickHireEmail');
+            localStorage.removeItem('quickHireName');
+            
+            state.currentUser = {
+                name: "Guest",
+                email: "",
+                credits: 1,
+                plan: "free",
+                documents: state.currentUser.documents, // Keep documents
+                token: null
+            };
+            
+            updateUI();
+            showToast('You have been logged out', 'info');
+        }
+
+        // Form Validation
+        function validateForm() {
+            let isValid = true;
+            
+            // Basic Info validation
+            const currentPosition = document.getElementById('currentPosition');
+            if (!currentPosition.value.trim()) {
+                showError(currentPosition, 'currentPositionError');
+                isValid = false;
+            } else {
+                clearError(currentPosition, 'currentPositionError');
+            }
+            
+            const yearsExperience = document.getElementById('yearsExperience');
+            if (!yearsExperience.value || isNaN(yearsExperience.value)) {
+                showError(yearsExperience, 'yearsExperienceError');
+                isValid = false;
+            } else {
+                clearError(yearsExperience, 'yearsExperienceError');
+            }
+            
+            const industry = document.getElementById('industry');
+            if (!industry.value) {
+                showError(industry, 'industryError');
+                isValid = false;
+            } else {
+                clearError(industry, 'industryError');
+            }
+            
+            const targetPosition = document.getElementById('targetPosition');
+            if (!targetPosition.value.trim()) {
+                showError(targetPosition, 'targetPositionError');
+                isValid = false;
+            } else {
+                clearError(targetPosition, 'targetPositionError');
+            }
+            
+            return isValid;
+        }
+
+        function showError(input, errorId) {
+            const formGroup = input.closest('.form-group');
+            formGroup.classList.add('error');
+            document.getElementById(errorId).style.display = 'block';
+        }
+
+        function clearError(input, errorId) {
+            const formGroup = input.closest('.form-group');
+            formGroup.classList.remove('error');
+            document.getElementById(errorId).style.display = 'none';
+        }
+
+        // Document Type Selection
+        function toggleDocumentType(e) {
+            e.preventDefault();
+            const type = e.currentTarget;
+            type.classList.toggle('selected');
+            type.setAttribute('aria-checked', type.classList.contains('selected').toString());
+        }
+
+        // Form Submission
+        async function submitForm(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Check if user has enough credits
+            if (state.currentUser.plan !== 'ultimate' && state.currentUser.credits < 1) {
+                showToast("You don't have enough credits. Please upgrade your plan.", 'error');
+                showUpgrade();
+                return;
+            }
+            
+            const generateBtn = document.getElementById('generateBtn');
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            
+            // Disable button and show loading
+            generateBtn.disabled = true;
+            generateBtn.classList.add('loading');
+            progressContainer.style.display = 'block';
+
+            // Collect form data
+            const formData = {
+                currentPosition: document.getElementById('currentPosition').value,
+                yearsExperience: document.getElementById('yearsExperience').value,
+                industry: document.getElementById('industry').value,
+                targetPosition: document.getElementById('targetPosition').value,
+                education: document.getElementById('education').value,
+                skills: state.skills,
+                experience: document.getElementById('experience').value,
+                achievements: document.getElementById('achievements').value,
+                projects: document.getElementById('projects').value,
+                tone: document.getElementById('tone').value,
+                jobDescription: document.getElementById('jobDescription').value,
+                documentTypes: Array.from(document.querySelectorAll('.document-type.selected')).map(el => el.dataset.type)
+            };
+            
+            if (formData.documentTypes.length === 0) {
+                showToast('Please select at least one document type to generate', 'error');
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('loading');
+                progressContainer.style.display = 'none';
+                return;
+            }
+            
+            // Save form data
+            saveFormData();
+            
+            // Simulate progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                progressFill.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    progressContainer.style.display = 'none';
+                    generateBtn.disabled = false;
+                    generateBtn.classList.remove('loading');
+                    
+                    // Deduct credit and update UI
+                    if (state.currentUser.plan !== 'ultimate') {
+                        state.currentUser.credits -= 1;
+                    }
+                    
+                    // Add new document to history
+                    const newDoc = {
+                        id: state.currentUser.documents.length + 1,
+                        type: formData.documentTypes.join(', '),
+                        title: formData.targetPosition,
+                        description: `Generated for ${formData.industry} industry with ${formData.tone} tone`,
+                        date: new Date().toLocaleDateString(state.currentLanguage, { month: 'short', day: 'numeric', year: 'numeric' }),
+                        content: generateDocumentContent(formData)
+                    };
+                    state.currentUser.documents.unshift(newDoc);
+                    
+                    updateUI();
+                    showSuccessModal();
+                }
+            }, 300);
+        }
+
+        function generateDocumentContent(formData) {
+            // In a real app, this would call your backend API to generate the content
+            // For demo purposes, we'll just create a simple document
+            
+            let content = `
+                <h1>${formData.targetPosition}</h1>
+                <h2>${state.currentUser.name}</h2>
+                <p><strong>Industry:</strong> ${formData.industry}</p>
+                <p><strong>Years of Experience:</strong> ${formData.yearsExperience}</p>
+                
+                <h3>Skills</h3>
+                <ul>
+                    ${formData.skills.map(skill => `<li>${skill}</li>`).join('')}
+                </ul>
+                
+                <h3>Experience</h3>
+                <p>${formData.experience || 'No experience provided'}</p>
+                
+                <h3>Education</h3>
+                <p>${formData.education || 'No education provided'}</p>
+            `;
+            
+            return content;
+        }
+
+        // Document Preview and Download
+        function previewDocument(docId) {
+            const doc = state.currentUser.documents.find(d => d.id === docId);
+            if (!doc) return;
+            
+            document.getElementById('previewContent').innerHTML = doc.content;
+            showModal('previewModal');
+        }
+
+        function printDocument() {
+            window.print();
+        }
+
+        function downloadDocuments() {
+            // In a real app, this would generate and download PDFs
+            // For demo, we'll just show a toast
+            showToast('Documents downloaded as PDF', 'success');
+            closeModal();
+        }
+
+        // Form Data Persistence
+        function saveFormData() {
+            const formData = {
+                currentPosition: document.getElementById('currentPosition').value,
+                yearsExperience: document.getElementById('yearsExperience').value,
+                industry: document.getElementById('industry').value,
+                targetPosition: document.getElementById('targetPosition').value,
+                education: document.getElementById('education').value,
+                skills: state.skills,
+                experience: document.getElementById('experience').value,
+                achievements: document.getElementById('achievements').value,
+                projects: document.getElementById('projects').value,
+                tone: document.getElementById('tone').value,
+                jobDescription: document.getElementById('jobDescription').value,
+                documentTypes: Array.from(document.querySelectorAll('.document-type.selected')).map(el => el.dataset.type)
+            };
+            
+            localStorage.setItem('quickHireFormData', JSON.stringify(formData));
+        }
+
+        function loadFormData() {
+            const savedData = localStorage.getItem('quickHireFormData');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                
+                document.getElementById('currentPosition').value = formData.currentPosition || '';
+                document.getElementById('yearsExperience').value = formData.yearsExperience || '';
+                document.getElementById('industry').value = formData.industry || '';
+                document.getElementById('targetPosition').value = formData.targetPosition || '';
+                document.getElementById('education').value = formData.education || '';
+                document.getElementById('experience').value = formData.experience || '';
+                document.getElementById('achievements').value = formData.achievements || '';
+                document.getElementById('projects').value = formData.projects || '';
+                document.getElementById('tone').value = formData.tone || 'professional';
+                document.getElementById('jobDescription').value = formData.jobDescription || '';
+                
+                state.skills = formData.skills || [];
+                updateSkillsTags();
+                
+                // Reset document type selections
+                document.querySelectorAll('.document-type').forEach(type => {
+                    type.classList.remove('selected');
+                    type.setAttribute('aria-checked', 'false');
+                });
+                
+                // Restore selected document types
+                if (formData.documentTypes) {
+                    formData.documentTypes.forEach(type => {
+                        const el = document.querySelector(`.document-type[data-type="${type}"]`);
+                        if (el) {
+                            el.classList.add('selected');
+                            el.setAttribute('aria-checked', 'true');
+                        }
+                    });
+                }
+            }
+        }
+
+        // Skill Tags
+        function addSkill(event) {
+            if (event.key === 'Enter' && event.target.value.trim()) {
+                event.preventDefault();
+                const skill = event.target.value.trim();
+                if (!state.skills.includes(skill)) {
+                    state.skills.push(skill);
+                    updateSkillsTags();
+                    saveFormData();
+                }
+                event.target.value = '';
+            }
+        }
+
+        function updateSkillsTags() {
+            const skillsTags = document.getElementById('skills-tags');
+            skillsTags.innerHTML = '';
+            state.skills.forEach(skill => {
+                const tag = document.createElement('span');
+                tag.className = 'skill-tag';
+                tag.innerHTML = `
+                    ${skill}
+                    <i class="fas fa-times remove" onclick="removeSkill('${skill}')" aria-label="Remove skill"></i>
+                `;
+                skillsTags.appendChild(tag);
+            });
+        }
+
+        function removeSkill(skill) {
+            state.skills = state.skills.filter(s => s !== skill);
+            updateSkillsTags();
+            saveFormData();
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.form-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+            
+            const activeTab = document.querySelector(`button[onclick="switchTab('${tabId}')"]`);
+            activeTab.classList.add('active');
+            activeTab.setAttribute('aria-selected', 'true');
+            document.getElementById(`${tabId}-tab`).style.display = 'block';
+        }
+
+        // Modal Functions
+        function showModal(modalId) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+            });
+            document.getElementById(modalId).style.display = 'block';
+            document.getElementById(modalId).setAttribute('aria-hidden', 'false');
+            
+            // Focus the first focusable element in the modal
+            const focusable = document.getElementById(modalId).querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (focusable) focusable.focus();
+            
+            // Add keyboard trap for accessibility
+            trapFocus(document.getElementById(modalId));
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+            });
+        }
+
+        function trapFocus(element) {
+            const focusableElements = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+            
+            element.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable.focus();
+                        }
+                    }
+                }
+                
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        }
+
+        function showSuccessModal() {
+            showModal('successModal');
+        }
+
+        function showLogin() {
+            showModal('loginModal');
+        }
+
+        function showSignup() {
+            showModal('signupModal');
+        }
+
+        function showUpgrade() {
+            showModal('upgradeModal');
+        }
+
+        function showReferral() {
+            showModal('referralModal');
+        }
+
+        function showHistory() {
+            // Populate documents grid
+            const documentsGrid = document.getElementById('documentsGrid');
+            documentsGrid.innerHTML = '';
+            
+            state.currentUser.documents.forEach(doc => {
+                const docCard = document.createElement('div');
+                docCard.className = 'document-card';
+                docCard.innerHTML = `
+                    <div class="document-header">
+                        <span class="document-type">${doc.type}</span>
+                        <span class="document-date">${doc.date}</span>
+                    </div>
+                    <h4 class="document-title">${doc.title}</h4>
+                    <p>${doc.description}</p>
+                    <div class="document-actions">
+                        <button class="btn btn-primary" onclick="previewDocument(${doc.id})">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadDocument(${doc.id})">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                `;
+                documentsGrid.appendChild(docCard);
+            });
+            
+            showModal('historyModal');
+        }
+
+        function showSupport() {
+            showModal('supportModal');
+        }
+
+        function showPricing() {
+            showModal('pricingModal');
+        }
+
+        function showHome() {
+            // In a real app, this would redirect to the home page
+            closeModal();
+        }
+
+        // Upgrade Functions
+        function selectPlan(plan) {
+            state.selectedPlan = plan;
+            
+            // Update UI to show selected plan
+            document.querySelectorAll('.pricing-plan').forEach(planEl => {
+                planEl.classList.remove('selected');
+            });
+            
+            event.currentTarget.classList.add('selected');
+        }
+
+        function completeUpgrade() {
+            if (!state.selectedPlan) {
+                showToast('Please select a plan first', 'error');
+                return;
+            }
+            
+            // In a real app, this would process payment
+            // For demo, we'll just update the user's plan
+            state.currentUser.plan = state.selectedPlan;
+            
+            // Add credits based on plan
+            if (state.selectedPlan === 'starter') {
+                state.currentUser.credits += 10;
+            } else if (state.selectedPlan === 'pro') {
+                state.currentUser.credits += 30;
+            } else if (state.selectedPlan === 'ultimate') {
+                state.currentUser.credits = 999; // Unlimited
+            }
+            
+            updateUI();
+            closeModal();
+            
+            // Show success message
+            showToast(`Success! You've been upgraded to the ${state.selectedPlan} plan.`, 'success');
+        }
+
+        // Referral Functions
+        function copyReferralCode() {
+            const code = document.getElementById('referralCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Referral code copied to clipboard!', 'success');
+            }).catch(err => {
+                showToast('Failed to copy referral code', 'error');
+            });
+        }
+
+        function shareOnFacebook() {
+            const url = `https://www.facebook.com/sharer/sharer.php?u=https://quickhire.ai/ref/${state.currentUser.email}`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnTwitter() {
+            const text = `Check out QuickHire AI - the best tool for creating professional resumes and cover letters! Use my code ${document.getElementById('referralCode').textContent} for a bonus.`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnLinkedIn() {
+            const url = `https://www.linkedin.com/shareArticle?mini=true&url=https://quickhire.ai/ref/${state.currentUser.email}&title=QuickHire%20AI&summary=The%20best%20tool%20for%20creating%20professional%20resumes`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = `Check out QuickHire AI - the best tool for creating professional resumes and cover letters! Use my code ${document.getElementById('referralCode').textContent} for a bonus.`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareViaEmail() {
+            const subject = "Check out QuickHire AI";
+            const body = `Hi,\n\nI thought you might be interested in QuickHire AI - the best tool for creating professional resumes and cover letters!\n\nUse my referral code ${document.getElementById('referralCode').textContent} to get a bonus when you sign up.\n\nCheck it out here: https://quickhire.ai`;
+            const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = url;
+        }
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('show');
+        }
+
+        // Update UI based on state
+        function updateUI() {
+            document.getElementById('credit-count').textContent = state.currentUser.credits;
+            
+            // Update plan badge
+            const planBadge = document.getElementById('plan-badge');
+            planBadge.className = `plan-badge plan-${state.currentUser.plan}`;
+            planBadge.innerHTML = `<i class="fas fa-${state.currentUser.plan === 'free' ? 'gift' : 'crown'}"></i> ${state.currentUser.plan.charAt(0).toUpperCase() + state.currentUser.plan.slice(1)} Plan`;
+            
+            // Update user menu if logged in
+            if (state.currentUser.token) {
+                const userAvatar = document.querySelector('.user-avatar');
+                if (userAvatar) {
+                    userAvatar.textContent = state.currentUser.name.charAt(0).toUpperCase();
+                }
+            }
+        }
+
+        // Initialize Event Listeners
+        function initEventListeners() {
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Language selector
+            document.getElementById('languageBtn').addEventListener('click', openLanguageDropdown);
+            
+            // Close language dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.language-selector')) {
+                    closeLanguageDropdown();
+                }
+            });
+            
+            // Mobile menu
+            document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+            document.getElementById('mobileMenuClose').addEventListener('click', closeMobileMenu);
+            
+            // Form submission
+            document.getElementById('careerForm').addEventListener('submit', submitForm);
+            
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!email || !password) {
+                    showToast('Please fill in all fields', 'error');
+                    return;
+                }
+                
+                try {
+                    await login(email, password);
+                    closeModal();
+                    updateUI();
+                    showToast(`Welcome back, ${state.currentUser.name}!`, 'success');
+                } catch (error) {
+                    showToast('Login failed. Please try again.', 'error');
+                }
+            });
+            
+            // Signup form
+            document.getElementById('signupForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                
+                if (!name || !email || !password) {
+                    showToast('Please fill in all fields', 'error');
+                    return;
+                }
+                
+                if (password.length < 8) {
+                    showToast('Password must be at least 8 characters', 'error');
+                    return;
+                }
+                
+                try {
+                    await signup(name, email, password);
+                    closeModal();
+                    updateUI();
+                    showToast(`Welcome to QuickHire AI, ${name}!`, 'success');
+                } catch (error) {
+                    showToast('Signup failed. Please try again.', 'error');
+                }
+            });
+            
+            // Support form
+            document.getElementById('supportForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('supportName').value;
+                const email = document.getElementById('supportEmail').value;
+                const subject = document.getElementById('supportSubject').value;
+                const message = document.getElementById('supportMessage').value;
+                
+                if (!name || !email || !subject || !message) {
+                    showToast('Please fill in all fields', 'error');
+                    return;
+                }
+                
+                // In a real app, this would send to support system
+                closeModal();
+                showToast(`Thank you, ${name}! Your support request has been submitted.`, 'success');
+            });
+            
+            // Keyboard navigation for tabs
+            document.querySelectorAll('.form-tab').forEach(tab => {
+                tab.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const tabId = this.getAttribute('onclick').match(/switchTab\('(.*?)'\)/)[1];
+                        switchTab(tabId);
+                    }
+                });
+            });
+            
+            // Close modals when clicking outside
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeModal();
+                    }
+                });
+            });
+        }
+
+        // Helper function for accessibility
+        function trapFocus(element) {
+            const focusableElements = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+            
+            element.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable.focus();
+                        }
+                    }
+                }
+                
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        }
+
+        // Expose functions to global scope for HTML onclick attributes
+        window.switchTab = switchTab;
+        window.addSkill = addSkill;
+        window.removeSkill = removeSkill;
+        window.showSuccessModal = showSuccessModal;
+        window.showLogin = showLogin;
+        window.showSignup = showSignup;
+        window.showUpgrade = showUpgrade;
+        window.showReferral = showReferral;
+        window.showHistory = showHistory;
+        window.showSupport = showSupport;
+        window.showPricing = showPricing;
+        window.showHome = showHome;
+        window.closeModal = closeModal;
+        window.selectPlan = selectPlan;
+        window.completeUpgrade = completeUpgrade;
+        window.copyReferralCode = copyReferralCode;
+        window.shareOnFacebook = shareOnFacebook;
+        window.shareOnTwitter = shareOnTwitter;
+        window.shareOnLinkedIn = shareOnLinkedIn;
+        window.shareOnWhatsApp = shareOnWhatsApp;
+        window.shareViaEmail = shareViaEmail;
+        window.changeLanguage = changeLanguage;
+        window.previewDocument = previewDocument;
+        window.printDocument = printDocument;
+        window.downloadDocuments = downloadDocuments;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.closeMobileMenu = closeMobileMenu;
+
+        // Profile Modal Logic
+        function showProfile() {
+            document.getElementById('profileName').value = state.currentUser.name || '';
+            document.getElementById('profileEmail').value = state.currentUser.email || '';
+            document.getElementById('profilePassword').value = '';
+            showModal('profileModal');
+        }
+        document.getElementById('profileBtn').addEventListener('click', showProfile);
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('profileName').value;
+            const email = document.getElementById('profileEmail').value;
+            const password = document.getElementById('profilePassword').value;
+            if (!name || !email) {
+                showToast('Name and email are required', 'error', true);
+                return;
+            }
+            state.currentUser.name = name;
+            state.currentUser.email = email;
+            if (password && password.length >= 8) {
+                // Simulate password change
+                showToast('Password updated!', 'success');
+            }
+            localStorage.setItem('quickHireName', name);
+            localStorage.setItem('quickHireEmail', email);
+            updateUI();
+            closeModal();
+            showToast('Profile updated!', 'success');
+        });
+
+        // Credit Purchase Modal Logic
+        document.getElementById('creditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('creditAmount').value, 10);
+            state.currentUser.credits += amount;
+            updateUI();
+            closeModal();
+            showToast(`Purchased ${amount} credits!`, 'success');
+        });
+
+        // Add a button to open the credit modal in the quick actions
+        function showCreditModal() {
+            showModal('creditModal');
+        }
+
+        function exportWord() {
+            const content = document.getElementById('previewContent').innerHTML;
+            const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export Word</title></head><body>`;
+            const footer = '</body></html>';
+            const sourceHTML = header + content + footer;
+            const source = 'data:application/msword;charset=utf-8,' + encodeURIComponent(sourceHTML);
+            const fileDownload = document.createElement('a');
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            fileDownload.download = 'document.doc';
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+        }
+        function enableEditPreview() {
+            const preview = document.getElementById('previewContent');
+            preview.contentEditable = true;
+            preview.focus();
+            showToast('You can now edit the document. Click outside or close to finish.', 'info', true);
+        }
+
+        // Add exportWord and enableEditPreview to global scope
+        window.exportWord = exportWord;
+        window.enableEditPreview = enableEditPreview;
+    </script>
+</body>
+</html>

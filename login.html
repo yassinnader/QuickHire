@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – QuickHire AI</title>
+    <meta name="description" content="Login to your QuickHire AI account to access AI-powered career tools">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    
+    <style>
+        /* Critical CSS (above-the-fold) */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --error: #ef4444;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --text: #334155;
+            --text-light: #64748b;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: var(--gradient);
+            color: white;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+                /* Login Page Specific Styles */
+        .login-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: white;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: white;
+        }
+
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .login-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-btn.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .loading {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .forgot-password a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-btn {
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            background: #333;
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--error);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 2rem;
+            }
+            
+            .login-title {
+                font-size: 2rem;
+            }
+            
+            .social-login {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 1.5rem;
+            }
+            
+            .login-title {
+                font-size: 1.8rem;
+            }
+            
+            input[type="email"], input[type="password"] {
+                padding: 10px 14px 10px 36px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="login-styles.css" media="print" onload="this.media='all'">
+</head>
+<body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
+    <header class="navbar" role="banner">
+        <a href="index.html" class="nav-logo">
+            <span aria-hidden="true">🚀</span> QuickHire AI
+        </a>
+        <nav class="nav-links" role="navigation" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content" class="container">
+        <div class="login-card">
+            <h1 class="login-title">Welcome Back</h1>
+            
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-container">
+                        <input type="email" id="email" placeholder="Enter your email" required autocomplete="email"
+                               aria-describedby="email-error">
+                        <span class="input-icon" aria-hidden="true">📧</span>
+                    </div>
+                    <div id="email-error" class="error-message" role="alert"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="password" placeholder="Enter your password" required 
+                               autocomplete="current-password" aria-describedby="password-error">
+                        <button type="button" class="password-toggle" id="password-toggle" aria-label="Show password">
+                            <span aria-hidden="true">👁️</span>
+                        </button>
+                    </div>
+                    <div id="password-error" class="error-message" role="alert"></div>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                
+                <button type="submit" class="login-btn" aria-live="polite">
+                    <span class="loading" id="loading" aria-hidden="true"></span>
+                    <span id="btn-text">Sign In</span>
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" id="forgot-password-link">Forgot your password?</a>
+            </div>
+            
+            <div class="divider" aria-hidden="true">or</div>
+            
+            <div class="social-login">
+                <button type="button" class="social-btn" data-provider="google" aria-label="Sign in with Google">
+                    <span aria-hidden="true">🔍</span> Google
+                </button>
+                <button type="button" class="social-btn" data-provider="linkedin" aria-label="Sign in with LinkedIn">
+                    <span aria-hidden="true">💼</span> LinkedIn
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast notification (will be injected by JS when needed) -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <!-- JavaScript -->
+    <script>
+        // Enhanced LoginManager class with better error handling and accessibility
+        class LoginManager {
+            constructor() {
+                // Cache DOM elements
+                this.form = document.getElementById('loginForm');
+                this.emailInput = document.getElementById('email');
+                this.passwordInput = document.getElementById('password');
+                this.rememberCheckbox = document.getElementById('remember');
+                this.passwordToggle = document.getElementById('password-toggle');
+                this.loginBtn = document.querySelector('.login-btn');
+                this.loading = document.getElementById('loading');
+                this.btnText = document.getElementById('btn-text');
+                this.forgotPasswordLink = document.getElementById('forgot-password-link');
+                
+                // State management
+                this.isSubmitting = false;
+                
+                // Initialize
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadRememberedEmail();
+                this.createParticles();
+            }
+
+            setupEventListeners() {
+                // Form events
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Input validation
+                this.emailInput.addEventListener('input', () => this.validateEmail());
+                this.emailInput.addEventListener('blur', () => this.validateEmail());
+                this.passwordInput.addEventListener('input', () => this.validatePassword());
+                this.passwordInput.addEventListener('blur', () => this.validatePassword());
+
+                // Password toggle
+                this.passwordToggle.addEventListener('click', () => this.togglePasswordVisibility());
+                this.passwordToggle.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        this.togglePasswordVisibility();
+                    }
+                });
+
+                // Social login
+                document.querySelectorAll('.social-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.handleSocialLogin(e));
+                });
+
+                // Forgot password
+                this.forgotPasswordLink.addEventListener('click', (e) => this.handleForgotPassword(e));
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
+            }
+
+            // Form validation methods
+            validateEmail() {
+                const email = this.emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (!email) {
+                    this.showFieldError('email', 'Email is required');
+                    return false;
+                }
+                
+                if (!emailRegex.test(email)) {
+                    this.showFieldError('email', 'Please enter a valid email address');
+                    return false;
+                }
+                
+                this.hideFieldError('email');
+                this.emailInput.classList.add('success');
+                return true;
+            }
+
+            validatePassword() {
+                const password = this.passwordInput.value;
+                
+                if (!password) {
+                    this.showFieldError('password', 'Password is required');
+                    return false;
+                }
+                
+                if (password.length < 6) {
+                    this.showFieldError('password', 'Password must be at least 6 characters');
+                    return false;
+                }
+                
+                this.hideFieldError('password');
+                this.passwordInput.classList.add('success');
+                return true;
+            }
+
+            showFieldError(field, message) {
+                const input = document.getElementById(field);
+                const errorElement = document.getElementById(`${field}-error`);
+                
+                input.classList.add('error');
+                input.classList.remove('success');
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+                errorElement.setAttribute('aria-live', 'assertive');
+            }
+
+            hideFieldError(field) {
+                const input = document.getElementById(field);
+                const errorElement = document.getElementById(`${field}-error`);
+                
+                input.classList.remove('error');
+                errorElement.classList.remove('show');
+                errorElement.removeAttribute('aria-live');
+            }
+
+            // Form submission handler
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                if (this.isSubmitting) return;
+
+                // Validate form
+                const isEmailValid = this.validateEmail();
+                const isPasswordValid = this.validatePassword();
+                
+                if (!isEmailValid || !isPasswordValid) {
+                    this.showToast('Please fix the errors above', 'error');
+                    return;
+                }
+
+                this.isSubmitting = true;
+                this.showLoading();
+
+                try {
+                    // Simulate API call
+                    const response = await this.simulateLogin();
+                    
+                    if (response.success) {
+                        this.handleLoginSuccess(response.user);
+                    } else {
+                        throw new Error(response.message || 'Login failed');
+                    }
+                } catch (error) {
+                    this.handleLoginError(error.message);
+                } finally {
+                    this.isSubmitting = false;
+                }
+            }
+
+            // Simulate API call (replace with actual fetch in production)
+            async simulateLogin() {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const email = this.emailInput.value.trim().toLowerCase();
+                const password = this.passwordInput.value;
+                
+                // Demo credentials for testing
+                if (email === 'demo@quickhire.ai' && password === 'demo123') {
+                    return { 
+                        success: true, 
+                        user: { 
+                            name: 'Demo User', 
+                            email,
+                            token: 'demo-token-123' 
+                        } 
+                    };
+                }
+                
+                // Random success/failure for demo
+                if (Math.random() > 0.3) {
+                    return { 
+                        success: true, 
+                        user: { 
+                            name: email.split('@')[0], 
+                            email,
+                            token: 'demo-token-' + Math.random().toString(36).substr(2, 9)
+                        } 
+                    };
+                }
+                
+                return { 
+                    success: false, 
+                    message: 'Invalid email or password' 
+                };
+            }
+
+            handleLoginSuccess(user) {
+                // Update UI
+                this.btnText.textContent = 'Success!';
+                this.loginBtn.classList.add('success');
+                
+                // Handle remember me
+                if (this.rememberCheckbox.checked) {
+                    localStorage.setItem('rememberedEmail', user.email);
+                } else {
+                    localStorage.removeItem('rememberedEmail');
+                }
+
+                // Show success message
+                this.showToast(`Welcome back, ${user.name}!`, 'success');
+                
+                // In a real app, you would:
+                // 1. Store the auth token
+                // 2. Redirect to dashboard
+                setTimeout(() => {
+                    console.log('Redirecting to dashboard...');
+                    window.location.href = 'dashboard.html'; // This would be your actual dashboard page
+                }, 1500);
+            }
+
+            handleLoginError(message) {
+                // Reset form state
+                this.btnText.textContent = 'Sign In';
+                this.loginBtn.classList.remove('success');
+                this.loginBtn.disabled = false;
+                this.loading.style.display = 'none';
+                
+                // Show error message
+                this.showToast(message || 'Login failed. Please try again.', 'error');
+                
+                // Add shake animation
+                this.form.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    this.form.style.animation = '';
+                }, 500);
+            }
+
+            // UI helper methods
+            showLoading() {
+                this.loading.style.display = 'inline-block';
+                this.btnText.textContent = 'Signing In...';
+                this.loginBtn.disabled = true;
+            }
+
+            togglePasswordVisibility() {
+                const isPassword = this.passwordInput.type === 'password';
+                this.passwordInput.type = isPassword ? 'text' : 'password';
+                
+                const toggleIcon = this.passwordToggle.querySelector('span');
+                toggleIcon.textContent = isPassword ? '🙈' : '👁️';
+                
+                // Update aria-label
+                this.passwordToggle.setAttribute(
+                    'aria-label', 
+                    isPassword ? 'Hide password' : 'Show password'
+                );
+                
+                // Brief focus to show cursor position
+                this.passwordInput.focus();
+            }
+
+            // Social login handler
+            handleSocialLogin(e) {
+                e.preventDefault();
+                const provider = e.currentTarget.dataset.provider;
+                
+                // Add loading state
+                const originalText = e.currentTarget.innerHTML;
+                e.currentTarget.innerHTML = '⏳ Connecting...';
+                e.currentTarget.disabled = true;
+                
+                // Simulate social login
+                setTimeout(() => {
+                    this.showToast(
+                        `${provider.charAt(0).toUpperCase() + provider.slice(1)} login would be integrated here!`, 
+                        'success'
+                    );
+                    e.currentTarget.innerHTML = originalText;
+                    e.currentTarget.disabled = false;
+                }, 1500);
+            }
+
+            // Forgot password handler
+            handleForgotPassword(e) {
+                e.preventDefault();
+                
+                const email = prompt('Enter your email address to reset password:');
+                if (email && this.isValidEmail(email)) {
+                    this.showToast(`Password reset link sent to ${email}`, 'success');
+                } else if (email) {
+                    this.showToast('Please enter a valid email address', 'error');
+                }
+            }
+
+            // Helper methods
+            isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            loadRememberedEmail() {
+                const rememberedEmail = localStorage.getItem('rememberedEmail');
+                if (rememberedEmail) {
+                    this.emailInput.value = rememberedEmail;
+                    this.rememberCheckbox.checked = true;
+                    this.passwordInput.focus();
+                }
+            }
+
+            handleKeyboardShortcuts(e) {
+                // Ctrl/Cmd + Enter to submit form
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    this.form.dispatchEvent(new Event('submit'));
+                }
+            }
+
+            // Toast notification system
+            showToast(message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                
+                // Remove existing toast
+                while (container.firstChild) {
+                    container.removeChild(container.firstChild);
+                }
+                
+                // Create new toast
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                toast.setAttribute('role', 'alert');
+                
+                container.appendChild(toast);
+                
+                // Show toast
+                setTimeout(() => toast.classList.add('show'), 10);
+                
+                // Auto-dismiss after 5 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 5000);
+            }
+
+            // Particle background animation
+            createParticles() {
+                const container = document.createElement('div');
+                container.className = 'particles';
+                document.body.insertBefore(container, document.body.firstChild);
+                
+                const particleCount = 8;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    this.createParticle(container);
+                }
+                
+                setInterval(() => {
+                    if (container.children.length < particleCount * 2) {
+                        this.createParticle(container);
+                    }
+                }, 3000);
+            }
+            
+            createParticle(container) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.setAttribute('aria-hidden', 'true');
+                
+                const size = Math.random() * 60 + 20;
+                const animationDuration = Math.random() * 4 + 4;
+                
+                Object.assign(particle.style, {
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    left: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 6}s`,
+                    animationDuration: `${animationDuration}s`,
+                    opacity: Math.random() * 0.5 + 0.3
+                });
+                
+                container.appendChild(particle);
+                
+                // Remove after animation completes
+                setTimeout(() => particle.remove(), animationDuration * 1000 + 1000);
+            }
+        }
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+                50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+            }
+            
+            .skip-link {
+                position: absolute;
+                top: -40px;
+                left: 0;
+                background: var(--dark);
+                color: white;
+                padding: 8px;
+                z-index: 100;
+                transition: top 0.3s;
+            }
+            
+            .skip-link:focus {
+                top: 0;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginManager = new LoginManager();
+            
+            // Add typing effect to welcome message
+            const welcomeText = document.querySelector('.login-title');
+            if (welcomeText) {
+                const originalText = welcomeText.textContent;
+                welcomeText.textContent = '';
+                
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < originalText.length) {
+                        welcomeText.textContent += originalText.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 50);
+                    }
+                };
+                
+                setTimeout(typeWriter, 300);
+            }
+        });
+    </script>
+</body>
+</html>

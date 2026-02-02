@@ -1,0 +1,5 @@
+fastapi==0.92.0
+uvicorn==0.18.3
+xhtml2pdf==0.2.6
+openai==0.25.0
+python-dotenv==0.21.0
